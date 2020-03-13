@@ -1,0 +1,62 @@
+{
+	"manifestVersion": 1,
+	"id": "use-netcore-sonarcloud",
+	"name": "Use .NET Core SonarCloud",
+	"version": "1.0.0",
+	"publisher": "stano-petko",
+	"branding": {
+		"theme": "light"
+	},
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"description": "Allows to run SonarCloud for .NET Core projects on on-premise build agents behind corporate proxy.",
+	"public": true,
+	"categories": [
+		"Azure Pipelines"
+	],
+	"icons": {
+		"default": "extension-icon.png"
+	},
+	"tags": [
+		"build",
+		"ci",
+		"continuous integration",
+		"sonarcloud",
+		"sonar cloud"
+	],
+	"content": {
+		"details": {
+			"path": "README.md"
+		},
+		"license": {
+			"path": "LICENSE"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"uri": "https://github.com/satano/azure-devops-extensions/UseNetCoreSonarCloud"
+	},
+	"files": [
+		{
+			"path": "UseNetCoreSonarCloud"
+		}
+	],
+	"scopes": [
+		"vso.build"
+	],
+	"contributions": [
+		{
+			"id": "97a070c8-e426-46aa-8a40-4ac9760ce4f4",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "UseNetCoreSonarCloud"
+			}
+		}
+	]
+}
