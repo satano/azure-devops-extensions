@@ -1,21 +1,12 @@
 [CmdletBinding()]
 param(
-	[Parameter(Mandatory = $true)][String[]]$Services,
-	[Parameter(Mandatory = $true)][String]$ResourceGroup,
-	[Parameter(Mandatory = $true)][String]$ArtifactPath,
-	[Parameter(Mandatory = $true)][String]$AppNameFormat,
-	[Parameter(Mandatory = $true)][String]$AppPathFormat
+	[Parameter(Mandatory = $true)][string[]]$Services,
+	[Parameter(Mandatory = $true)][string]$ResourceGroup,
+	[Parameter(Mandatory = $true)][string]$ArtifactsPath,
+	[Parameter(Mandatory = $true)][string]$AppNameFormat,
+	[Parameter(Mandatory = $true)][string]$AppPathFormat,
+	[Parameter(Mandatory = $false)][switch]$LogAllJobs
 )
-
-function Trace-VstsEnteringInvocation {
-	Write-Host "`$Services = $Services"
-	Write-Host "`$ResourceGroup = $ResourceGroup"
-	Write-Host "`$ArtifactPath = $ArtifactPath"
-	Write-Host "`$AppNameFormat = $AppNameFormat"
-	Write-Host "`$AppPathFormat = $AppPathFormat"
-	Write-Host "------------------------------------------------------------"
-}
-function Trace-VstsLeavingInvocation { }
 
 Trace-VstsEnteringInvocation $MyInvocation
 try {
@@ -30,14 +21,14 @@ try {
 		}
 		Write-Host "  Application name${formatted}: $appName"
 		$formatted = ""
-		$appSource = "$ArtifactPath/$service.zip"
+		$appSource = "$ArtifactsPath/$service.zip"
 		if (-not [string]::IsNullOrWhiteSpace($AppPathFormat)) {
-			$appSource = [string]::Format($AppPathFormat, $ArtifactPath, $service);
+			$appSource = [string]::Format($AppPathFormat, $ArtifactsPath, $service);
 			$formatted = " (formatted)"
 		}
 		Write-Host "  Application source${formatted}: $appSource"
 
-		$jobs += Start-Job -Name $service -FilePath "$PSScriptRoot/Deploy-Service.ps1" -ArgumentList $ResourceGroup, $appName, $appSource
+		$jobs += Start-Job -Name $service -FilePath "$PSScriptRoot/Deploy-Service.ps1" -ArgumentList $ResourceGroup, $appName, $appSource | Out-Null
 	}
 	Wait-Job -Job $jobs
 
@@ -46,9 +37,24 @@ try {
 		if ($job.State -eq 'Failed') {
 			Write-Host "Error deploying service ""$($job.Name)""" -ForegroundColor Red
 			foreach ($errInfo in $job.ChildJobs[0].Error) {
-				Write-Host $errInfo.Exception.Message
+				$msg = $errInfo.Exception.Message
+				if ($msg.StartsWith("ERROR", "OrdinalIgnoreCase")) {
+					Write-Error $msg
+					# $host.UI.WriteErrorLine($msg)
+				}
+				elseif ($msg.StartsWith("WARNING", "OrdinalIgnoreCase")) {
+					Write-Warning $msg
+					# $host.UI.WriteWarningLine($msg)
+				}
+				else {
+					Write-Host $msg
+				}
+				$failed = $true;
 			}
-			$failed = $true
+		}
+		elseif ($LogAllJobs) {
+			Write-Host "Job result for service ""$($job.Name)"""
+			Receive-Job $job
 		}
 	}
 
