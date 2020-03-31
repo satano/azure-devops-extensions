@@ -1,0 +1,62 @@
+{
+	"manifestVersion": 1,
+	"id": "deploy-multiple-services",
+	"name": "Deploy multipe services",
+	"version": "0.0.1",
+	"publisher": "stano-petko",
+	"branding": {
+		"theme": "light"
+	},
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"description": "Deploys myltiple services to Azure Portal in paralled.",
+	"public": false,
+	"categories": [
+		"Azure Pipelines"
+	],
+	"icons": {
+		"default": "extension-icon.png"
+	},
+	"tags": [
+		"build",
+		"ci",
+		"release",
+		"continuous integration",
+		"web service"
+	],
+	"content": {
+		"details": {
+			"path": "README.md"
+		},
+		"license": {
+			"path": "LICENSE"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"uri": "https://github.com/satano/azure-devops-extensions/"
+	},
+	"files": [
+		{
+			"path": "DeployMultipleServices"
+		}
+	],
+	"scopes": [
+		"vso.build"
+	],
+	"contributions": [
+		{
+			"id": "0c143c0b-6078-42e5-adcb-9e6d3518f9cb",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "DeployMultipleServices"
+			}
+		}
+	]
+}
