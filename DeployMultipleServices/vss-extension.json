@@ -2,7 +2,7 @@
 	"manifestVersion": 1,
 	"id": "deploy-multiple-services",
 	"name": "Deploy multipe services",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "stano-petko",
 	"branding": {
 		"theme": "light"
@@ -49,7 +49,7 @@
 	],
 	"contributions": [
 		{
-			"id": "0c143c0b-6078-42e5-adcb-9e6d3518f9cb",
+			"id": "8204f1be-19c0-4c3d-8502-e8333249de28",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"
