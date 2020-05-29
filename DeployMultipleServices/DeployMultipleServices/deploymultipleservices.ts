@@ -8,7 +8,9 @@ export class azureclitask {
 	public static async runMain(): Promise<void> {
 		var toolExecutionError = null;
 		var exitCode: number = 0;
-		try{
+		try {
+			var debug: boolean = !!tl.getTaskVariable("System.Debug");
+
 			Utility.throwIfError(tl.execSync("az", "--version"));
 			// Set az cli config dir.
 			this.setConfigDirectory();
@@ -16,8 +18,13 @@ export class azureclitask {
 			var connectedService: string = tl.getInput("connectedServiceNameARM", true);
 			this.loginAzureRM(connectedService);
 
-			console.log('Listing resource groups:');
-			Utility.throwIfError(tl.execSync("az", `group list`));
+			var services: string[] = tl.getDelimitedInput("services", "\n", true);
+			var resourceGroup: string = tl.getInput("resourceGroup", true);
+			var artifactsPath: string = tl.getInput("artifactsPath", true);
+			var appNameFormat: string = tl.getInput("appNameFormat", true);
+			var appPathFormat: string = tl.getInput("appPathFormat", true);
+
+			Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
 		}
 		catch (err) {
 			toolExecutionError = err;
@@ -34,7 +41,7 @@ export class azureclitask {
 			// Set the task result to either succeeded or failed based on error was thrown or not.
 			if (toolExecutionError) {
 				tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
-			} else if (exitCode != 0){
+			} else if (exitCode != 0) {
 				tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
 			}
 			else {
@@ -54,7 +61,7 @@ export class azureclitask {
 		var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
 		var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-		if(authScheme.toLowerCase() == "serviceprincipal") {
+		if (authScheme.toLowerCase() == "serviceprincipal") {
 			let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
 			let cliPassword: string = null;
 			var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -77,11 +84,11 @@ export class azureclitask {
 			// Login using svn.
 			Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" -p "${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
 		}
-		else if(authScheme.toLowerCase() == "managedserviceidentity") {
+		else if (authScheme.toLowerCase() == "managedserviceidentity") {
 			// Login using msi.
 			Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
 		}
-		else{
+		else {
 			throw tl.loc('AuthSchemeNotSupported', authScheme);
 		}
 
@@ -103,7 +110,7 @@ export class azureclitask {
 	private static setAzureCloudBasedOnServiceEndpoint(): void {
 		var connectedService: string = tl.getInput("connectedServiceNameARM", true);
 		var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
-		if(!!environment) {
+		if (!!environment) {
 			console.log(tl.loc('SettingAzureCloud', environment));
 			Utility.throwIfError(tl.execSync("az", "cloud set -n " + environment));
 		}
@@ -122,7 +129,7 @@ export class azureclitask {
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
 
-if (!Utility.checkIfAzureSdkIsInstalled()) {
+if (!Utility.checkIfAzurePythonSdkIsInstalled()) {
 	tl.setResult(tl.TaskResult.Failed, tl.loc("AzureSDKNotFound"));
 }
 
