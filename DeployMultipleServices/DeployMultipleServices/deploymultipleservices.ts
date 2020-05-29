@@ -33,10 +33,10 @@ export class azureclitask {
 			console.log(`appPathFormat: ${appPathFormat}`);
 			console.log("");
 
-			var startTime = performance.now()
+			console.time();
 			Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
-			var endTime = performance.now()
-			console.log("Services deplyed in " + ((endTime - startTime) / 1000).toFixed(2) + " milliseconds.")
+			console.timeEnd();
+			// console.log("Services deplyed in " + ((endTime - startTime) / 1000).toFixed(2) + " milliseconds.")
 		}
 		catch (err) {
 			toolExecutionError = err;
