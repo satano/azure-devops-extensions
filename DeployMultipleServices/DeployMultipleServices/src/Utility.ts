@@ -16,12 +16,12 @@ export class Utility {
 		appPathFormat: string,
 		debug: Boolean) {
 
-		services.forEach(service => {
+		for (let service of services) {
+			service = service?.trim();
 			if (Utility.isNullOrWhitespace(service)) {
 				return;
 			}
 
-			service = service.trim();
 			console.log(`Started deploying service "${service}".`)
 			let formatted: string = "";
 			let appName: string = service;
@@ -40,8 +40,9 @@ export class Utility {
 			}
 			console.log(`  Application source${formatted}: ${appSource}`);
 
-			Utility.deployWebApp(resourceGroup, appName, appSource);
-		});
+			// Utility.deployWebApp(resourceGroup, appName, appSource);
+			await tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`);
+		}
 	}
 
 	public static formatString(format: string, ...args: any[]) {
@@ -64,11 +65,18 @@ export class Utility {
 	}
 
 	public static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
+		if (resultOfToolExecution.stdout != null) {
+			console.log(resultOfToolExecution.stdout);
+		}
 		if (resultOfToolExecution.code != 0) {
-			tl.error("Error Code: [" + resultOfToolExecution.code + "]");
 			if (errormsg) {
 				tl.error("Error: " + errormsg);
 			}
+			tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+			if (resultOfToolExecution.error?.message != null) {
+				tl.error(resultOfToolExecution.error.message);
+			}
+			tl.error(resultOfToolExecution.stderr);
 			throw resultOfToolExecution;
 		}
 	}

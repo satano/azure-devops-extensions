@@ -20,11 +20,23 @@ export class azureclitask {
 
 			var services: string[] = tl.getDelimitedInput("services", "\n", true);
 			var resourceGroup: string = tl.getInput("resourceGroup", true);
-			var artifactsPath: string = tl.getInput("artifactsPath", true);
+			var artifactsPath: string = tl.getPathInput("artifactsPath", true);
 			var appNameFormat: string = tl.getInput("appNameFormat", true);
 			var appPathFormat: string = tl.getInput("appPathFormat", true);
 
+			console.log("Input parameters");
+			console.log("----------------");
+			console.log(`services: ${services}`);
+			console.log(`resourceGroup: ${resourceGroup}`);
+			console.log(`artifactsPath: ${artifactsPath}`);
+			console.log(`appNameFormat: ${appNameFormat}`);
+			console.log(`appPathFormat: ${appPathFormat}`);
+			console.log("");
+
+			var startTime = performance.now()
 			Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
+			var endTime = performance.now()
+			console.log("Services deplyed in " + ((endTime - startTime) / 1000).toFixed(2) + " milliseconds.")
 		}
 		catch (err) {
 			toolExecutionError = err;
