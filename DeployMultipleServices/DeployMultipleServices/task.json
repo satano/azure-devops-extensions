@@ -52,7 +52,7 @@
 			"name": "artifactsPath",
 			"type": "string",
 			"label": "Artifacts path",
-			"defaultValue": "$(Pipeline.Workspace)",
+			"defaultValue": "$(System.DefaultWorkingDirectory)",
 			"required": true,
 			"helpMarkDown": "Base path for services' source files. Service is deployed as ZIP file."
 		},
