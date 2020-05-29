@@ -13,7 +13,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 6
+		"Patch": 7
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -50,7 +50,7 @@
 		},
 		{
 			"name": "artifactsPath",
-			"type": "string",
+			"type": "filePath",
 			"label": "Artifacts path",
 			"defaultValue": "$(System.DefaultWorkingDirectory)",
 			"required": true,
