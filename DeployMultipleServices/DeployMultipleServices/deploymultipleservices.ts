@@ -34,7 +34,7 @@ export class azureclitask {
 			console.log("");
 
 			console.time();
-			Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
+			await Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
 			console.timeEnd();
 			// console.log("Services deplyed in " + ((endTime - startTime) / 1000).toFixed(2) + " milliseconds.")
 		}
