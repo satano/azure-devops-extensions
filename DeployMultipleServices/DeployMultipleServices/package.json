@@ -1,6 +1,6 @@
 {
 	"name": "sp-devops-tasks-deploymultipleservices",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "",
 	"main": "deploymultipleservices.js",
 	"scripts": {
