@@ -14,8 +14,9 @@ export class Utility {
 		artifactsPath: string,
 		appNameFormat: string,
 		appPathFormat: string,
-		debug: Boolean) {
+		debug: Boolean): Promise<Boolean> {
 
+		var result: Boolean = true;
 		for (let service of services) {
 			service = service?.trim();
 			if (Utility.isNullOrWhitespace(service)) {
@@ -41,8 +42,14 @@ export class Utility {
 			console.log(`  Application source${formatted}: ${appSource}`);
 
 			// Utility.deployWebApp(resourceGroup, appName, appSource);
-			await tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`);
+			try {
+				await tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`);
+			} catch (error) {
+				result = false;
+				console.error(error);
+			}
 		}
+		return result;
 	}
 
 	public static formatString(format: string, ...args: any[]) {
