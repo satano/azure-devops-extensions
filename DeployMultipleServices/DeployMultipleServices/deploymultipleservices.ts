@@ -33,9 +33,10 @@ export class azureclitask {
 			console.log(`appPathFormat: ${appPathFormat}`);
 			console.log("");
 
-			console.time("Services deployed in");
+			const deployTimeLog: string = "All services deployed in";
+			console.time(deployTimeLog);
 			var result: Boolean = await Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
-			console.timeEnd("Services deployed in");
+			console.timeEnd(deployTimeLog);
 			if (!result) {
 				// TODO: localization
 				tl.setResult(tl.TaskResult.Failed, "Deployment of services failed.");

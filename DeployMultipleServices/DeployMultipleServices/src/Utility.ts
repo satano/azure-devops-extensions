@@ -4,10 +4,6 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export class Utility {
 
-	public static async deployWebApp(resourceGroup: string, appName: string, appSource: string) {
-		Utility.throwIfError(tl.execSync("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`));
-	}
-
 	public static async deployWebApps(
 		services: string[],
 		resourceGroup: string,
@@ -17,32 +13,52 @@ export class Utility {
 		debug: Boolean): Promise<Boolean> {
 
 		var result: Boolean = true;
+		var deployments: Q.Promise<void>[] = [];
 		for (let service of services) {
 			service = service?.trim();
 			if (Utility.isNullOrWhitespace(service)) {
 				return;
 			}
 
-			// TODO: localization
-			console.log(`Started deploying service "${service}".`)
-			let appName: string = service;
-			if (!Utility.isNullOrWhitespace(appNameFormat)) {
-				appName = Utility.formatString(appNameFormat, service);
-			}
-			console.log(`  Application name: ${appName}`)
-
 			let appSource = path.join(artifactsPath, `${service}.zip`);
 			if (!Utility.isNullOrWhitespace(appPathFormat)) {
 				appSource = Utility.formatString(appPathFormat, artifactsPath, service);
 			}
+			let appName: string = service;
+			if (!Utility.isNullOrWhitespace(appNameFormat)) {
+				appName = Utility.formatString(appNameFormat, service);
+			}
+			// TODO: localization
+			console.log(`Started deploying service "${service}".`)
 			console.log(`  Application source: ${appSource}`);
+			console.log(`  Azure service name: ${appName}`)
 
-			// Utility.deployWebApp(resourceGroup, appName, appSource);
-			try {
-				await tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`);
-			} catch (error) {
-				result = false;
-				console.error(error);
+			const id: string = "C";
+			let deployment = tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`)
+				.then(
+					result => {
+						console.log(`${id} # Service "${service}" is deployed.`)
+					},
+					error => {
+						result = false;
+						// console.error(`CONSOLE: Failed to deploy service "${service}".`);
+						// console.error(error);
+						tl.error(`${id} # TL: Failed to deploy service "${service}".`);
+					}
+				);
+			deployments.push(deployment);
+		}
+		await Promise.all(deployments);
+
+		let i: number = 0;
+		for (const deployment of deployments) {
+			i++;
+			if (deployment.isRejected()) {
+				console.log(`Service ${i}: REJECTED`)
+			} else if (deployment.isFulfilled()) {
+				console.log(`Service ${i}: FULFILLED`)
+			} else {
+				console.log(`Service ${i}: PENDING`)
 			}
 		}
 		return result;
