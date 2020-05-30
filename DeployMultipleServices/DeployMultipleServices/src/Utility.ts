@@ -23,23 +23,19 @@ export class Utility {
 				return;
 			}
 
+			// TODO: localization
 			console.log(`Started deploying service "${service}".`)
-			let formatted: string = "";
 			let appName: string = service;
-
 			if (!Utility.isNullOrWhitespace(appNameFormat)) {
 				appName = Utility.formatString(appNameFormat, service);
-				formatted = " (formatted)"
 			}
-			console.log(`  Application name${formatted}: ${appName}`)
+			console.log(`  Application name: ${appName}`)
 
-			formatted = "";
 			let appSource = path.join(artifactsPath, `${service}.zip`);
 			if (!Utility.isNullOrWhitespace(appPathFormat)) {
 				appSource = Utility.formatString(appPathFormat, artifactsPath, service);
-				formatted = " (formatted)";
 			}
-			console.log(`  Application source${formatted}: ${appSource}`);
+			console.log(`  Application source: ${appSource}`);
 
 			// Utility.deployWebApp(resourceGroup, appName, appSource);
 			try {
