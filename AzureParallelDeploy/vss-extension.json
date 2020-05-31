@@ -1,8 +1,8 @@
 {
 	"manifestVersion": 1,
-	"id": "deploy-multiple-services",
-	"name": "Deploy multipe services",
-	"version": "0.0.28",
+	"id": "azure-parallel-deploy",
+	"name": "Azure Parallel Deploy",
+	"version": "0.0.37",
 	"publisher": "stano-petko",
 	"branding": {
 		"theme": "light"
@@ -12,7 +12,7 @@
 			"id": "Microsoft.VisualStudio.Services"
 		}
 	],
-	"description": "Deploys myltiple services to Azure Portal in paralled.",
+	"description": "Minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
 	"public": false,
 	"categories": [
 		"Azure Pipelines"
@@ -41,7 +41,7 @@
 	},
 	"files": [
 		{
-			"path": "DeployMultipleServices"
+			"path": "AzureParallelDeploy"
 		}
 	],
 	"scopes": [
@@ -49,13 +49,13 @@
 	],
 	"contributions": [
 		{
-			"id": "8204f1be-19c0-4c3d-8502-e8333249de28",
+			"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"
 			],
 			"properties": {
-				"name": "DeployMultipleServices"
+				"name": "AzureParallelDeploy"
 			}
 		}
 	]

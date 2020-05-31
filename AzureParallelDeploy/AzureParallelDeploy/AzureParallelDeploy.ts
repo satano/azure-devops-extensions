@@ -15,14 +15,14 @@ export class azureclitask {
 			// Set az cli config dir.
 			this.setConfigDirectory();
 			this.setAzureCloudBasedOnServiceEndpoint();
-			var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+			var connectedService: string = tl.getInput("ConnectedServiceName", true);
 			this.loginAzureRM(connectedService);
 
-			var services: string[] = tl.getDelimitedInput("services", "\n", true);
-			var resourceGroup: string = tl.getInput("resourceGroup", true);
-			var artifactsPath: string = tl.getPathInput("artifactsPath", true);
-			var appNameFormat: string = tl.getInput("appNameFormat", true);
-			var appPathFormat: string = tl.getInput("appPathFormat", true);
+			var services: string[] = tl.getDelimitedInput("Services", "\n", true);
+			var resourceGroup: string = tl.getInput("ResourceGroup", true);
+			var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
+			var appNameFormat: string = tl.getInput("AppNameFormat", true);
+			var appPathFormat: string = tl.getInput("AppPathFormat", true);
 
 			console.log("Input parameters");
 			console.log("----------------");

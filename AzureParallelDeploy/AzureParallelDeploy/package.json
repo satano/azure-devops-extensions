@@ -1,8 +1,8 @@
 {
-	"name": "sp-devops-tasks-deploymultipleservices",
-	"version": "0.0.28",
+	"name": "sp-devops-tasks-azureparalleldeploy",
+	"version": "0.0.37",
 	"description": "",
-	"main": "deploymultipleservices.js",
+	"main": "AzureParallelDeploy.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
