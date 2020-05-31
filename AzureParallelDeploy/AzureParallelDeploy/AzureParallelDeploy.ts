@@ -124,7 +124,7 @@ export class azureclitask {
 	}
 
 	private static setAzureCloudBasedOnServiceEndpoint(): void {
-		var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+		var connectedService: string = tl.getInput("ConnectedServiceName", true);
 		var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
 		if (!!environment) {
 			console.log(tl.loc('SettingAzureCloud', environment));
