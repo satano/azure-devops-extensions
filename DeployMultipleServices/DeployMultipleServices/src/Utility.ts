@@ -33,17 +33,17 @@ export class Utility {
 			console.log(`  Application source: ${appSource}`);
 			console.log(`  Azure service name: ${appName}`)
 
-			const id: string = "C";
-			let deployment = tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src ${appSource}`)
+			let deployment = tl.exec("az", `webapp deployment source config-zip --resource-group ${resourceGroup} --name ${appName} --src "${appSource}"`)
 				.then(
 					result => {
-						console.log(`${id} # Service "${service}" is deployed.`)
+						console.log(`${service}: service is deployed.`)
 					},
 					error => {
 						result = false;
-						// console.error(`CONSOLE: Failed to deploy service "${service}".`);
-						// console.error(error);
-						tl.error(`${id} # TL: Failed to deploy service "${service}".`);
+						if (debug) {
+							console.error(error);
+						}
+						tl.error(`${service}: failed to deploy service.`);
 					}
 				);
 			deployments.push(deployment);
@@ -66,7 +66,7 @@ export class Utility {
 
 	public static formatString(format: string, ...args: any[]) {
 		return format.replace(/{(\d+)}/g, function (match, number) {
-			return typeof args[number] != 'undefined'
+			return typeof args[number] != undefined
 				? args[number]
 				: match;
 		});

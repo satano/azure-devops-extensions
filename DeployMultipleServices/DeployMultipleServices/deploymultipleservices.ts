@@ -31,7 +31,7 @@ export class azureclitask {
 			console.log(`artifactsPath: ${artifactsPath}`);
 			console.log(`appNameFormat: ${appNameFormat}`);
 			console.log(`appPathFormat: ${appPathFormat}`);
-			console.log("");
+			console.log("----------------");
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
