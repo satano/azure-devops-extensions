@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 38
+		"Patch": 42
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {

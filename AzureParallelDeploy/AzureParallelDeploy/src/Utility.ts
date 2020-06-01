@@ -49,18 +49,6 @@ export class Utility {
 			deployments.push(deployment);
 		}
 		await Promise.all(deployments);
-
-		let i: number = 0;
-		for (const deployment of deployments) {
-			i++;
-			if (deployment.isRejected()) {
-				console.log(`Service ${i}: REJECTED`)
-			} else if (deployment.isFulfilled()) {
-				console.log(`Service ${i}: FULFILLED`)
-			} else {
-				console.log(`Service ${i}: PENDING`)
-			}
-		}
 		return result;
 	}
 
