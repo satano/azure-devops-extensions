@@ -1,6 +1,7 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { ServiceInfo } from './ServiceInfo'
 
 export class Utility {
 
@@ -50,6 +51,40 @@ export class Utility {
 		}
 		await Promise.all(deployments);
 		return result;
+	}
+
+	public static ParseServices(source: string): ServiceInfo[] {
+		var services: ServiceInfo[] = [];
+		var parsed: object[] = JSON.parse(source);
+		const invalidInputError = "Invalid input JSON for services. JSON must be an array, containing only strings or objects (no nested arrays).";
+
+		var transformed = parsed.map((value: object, index: number, array: object[]) => {
+			if (typeof value == "string") {
+				var name = (value as string).trim();
+				if (name == "") {
+					throw new Error(invalidInputError);
+				}
+				return value;
+			}
+			return null;
+		});
+		console.log(transformed);
+		// for (const item of parsed) {
+		// 	var service: ServiceInfo = null
+		// 	if (Array.isArray(item)) {
+		// 		throw new Error(invalidInputError);
+		// 	} else if (typeof item == "string") {
+		// 		service =
+		// 		if (!this.isNullOrWhitespace(item)) {
+		// 			services.push(Object.assign(new ServiceInfo(), { name: item }));
+		// 		}
+		// 	} else if (typeof item == "object") {
+		// 		services.push(Object.assign(new ServiceInfo(), item));
+		// 	} else {
+		// 		throw new Error(invalidInputError);
+		// 	}
+		// }
+		return services;
 	}
 
 	public static formatString(format: string, ...args: any[]) {
