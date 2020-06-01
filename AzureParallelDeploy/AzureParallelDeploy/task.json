@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 42
+		"Patch": 45
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -40,7 +40,7 @@
 			"label": "Services",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Logical name of the services, one name per line."
+			"helpMarkDown": "Information about services to deploy. Info is a JSON string, in the simplest form it is an array of logical service names ('[ \"svc1\", \"svc2\" ]')."
 		},
 		{
 			"name": "ResourceGroup",
@@ -59,7 +59,7 @@
 			"label": "Artifacts path",
 			"defaultValue": "$(System.DefaultWorkingDirectory)",
 			"required": true,
-			"helpMarkDown": "Base path for services' source files. Service is deployed as ZIP file."
+			"helpMarkDown": "Base path for services' source files. Services are deployed from ZIP files."
 		},
 		{
 			"name": "AppNameFormat",

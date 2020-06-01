@@ -2,6 +2,8 @@ import fs = require("fs");
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { Utility } from "./src/Utility";
+import { Deployer } from "./src/Deployer";
+import { ServiceInfo } from "./src/ServiceInfo";
 
 export class azureclitask {
 
@@ -18,7 +20,7 @@ export class azureclitask {
 			var connectedService: string = tl.getInput("ConnectedServiceName", true);
 			this.loginAzureRM(connectedService);
 
-			var services: string[] = tl.getDelimitedInput("Services", "\n", true);
+			var services: string = tl.getInput("Services", true);
 			var resourceGroup: string = tl.getInput("ResourceGroup", true);
 			var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
 			var appNameFormat: string = tl.getInput("AppNameFormat", true);
@@ -26,16 +28,18 @@ export class azureclitask {
 
 			console.log("Input parameters");
 			console.log("----------------");
-			console.log(`services: ${services}`);
 			console.log(`resourceGroup: ${resourceGroup}`);
 			console.log(`artifactsPath: ${artifactsPath}`);
 			console.log(`appNameFormat: ${appNameFormat}`);
 			console.log(`appPathFormat: ${appPathFormat}`);
+			console.log(`services: ${services}`);
 			console.log("----------------");
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
-			var result: Boolean = await Utility.deployWebApps(services, resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
+			var deployer = new Deployer(resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
+			var serviceInfos: ServiceInfo[] = Utility.parseServices(services);
+			var result: Boolean = await deployer.deployWebApps(serviceInfos);
 			console.timeEnd(deployTimeLog);
 			if (!result) {
 				// TODO: localization
