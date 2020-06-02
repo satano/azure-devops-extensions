@@ -4,13 +4,12 @@ import tl = require("azure-pipelines-task-lib/task");
 import { Utility } from "./src/Utility";
 import { Deployer } from "./src/Deployer";
 import { AppType, ServiceInfo, Settings } from "./src/Interfaces";
-import { throws } from "assert";
 
 export class azureclitask {
 
 	public static async runMain(): Promise<void> {
+		var deploymentResult: boolean = undefined;
 		var toolExecutionError = null;
-		var exitCode: number = 0;
 		try {
 			Utility.throwIfError(tl.execSync("az", "--version"));
 			// Set az cli config dir.
@@ -28,12 +27,8 @@ export class azureclitask {
 			console.time(deployTimeLog);
 			var deployer = new Deployer(settings, debug);
 			var serviceInfos: ServiceInfo[] = Utility.parseServices(services);
-			var result: Boolean = await deployer.deployWebApps(serviceInfos);
+			deploymentResult = await deployer.deployWebApps(serviceInfos);
 			console.timeEnd(deployTimeLog);
-			if (!result) {
-				// TODO: localization
-				tl.setResult(tl.TaskResult.Failed, "Deployment of services failed.");
-			}
 		}
 		catch (err) {
 			toolExecutionError = err;
@@ -47,14 +42,13 @@ export class azureclitask {
 				tl.rmRF(this.cliPasswordPath);
 			}
 
-			// Set the task result to either succeeded or failed based on error was thrown or not.
 			if (toolExecutionError) {
 				tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
-			} else if (exitCode != 0) {
-				tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
-			}
-			else {
-				tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
+			} else if (deploymentResult === true) {
+				// TODO: localization
+				tl.setResult(tl.TaskResult.Succeeded, "All services were deployed.");
+			} else {
+				tl.setResult(tl.TaskResult.Failed, "Services were not deployed.");
 			}
 
 			if (this.isLoggedIn) {

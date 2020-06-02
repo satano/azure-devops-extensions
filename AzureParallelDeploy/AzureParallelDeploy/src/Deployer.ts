@@ -2,20 +2,19 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { AppType, ServiceInfo, Settings } from './Interfaces'
 import { Utility } from "./Utility";
-import { settings } from "cluster";
 
 export class Deployer {
 
-	public constructor(settings: Settings, debug: Boolean) {
+	public constructor(settings: Settings, debug: boolean) {
 		this.settings = settings;
 		this.debug = debug;
 	}
 
 	public readonly settings: Settings;
-	public readonly debug: Boolean;
+	public readonly debug: boolean;
 
-	public async deployWebApps(services: ServiceInfo[]): Promise<Boolean> {
-		var result: Boolean = true;
+	public async deployWebApps(services: ServiceInfo[]): Promise<boolean> {
+		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
 		for (const service of services) {
 			var deploymentInfo: ServiceInfo = this.createDeploymentInfo(service);
