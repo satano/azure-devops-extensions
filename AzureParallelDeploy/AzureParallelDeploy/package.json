@@ -1,6 +1,6 @@
 {
 	"name": "sp-devops-tasks-azureparalleldeploy",
-	"version": "0.0.48",
+	"version": "0.0.50",
 	"description": "",
 	"main": "AzureParallelDeploy.js",
 	"scripts": {

@@ -16,7 +16,8 @@ export class Deployer {
 	public async deployWebApps(services: ServiceInfo[]): Promise<boolean> {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
-		for (const service of services) {
+
+		services.forEach((service: ServiceInfo, index: number, array: ServiceInfo[]) => {
 			var deploymentInfo: ServiceInfo = this.createDeploymentInfo(service);
 			// TODO: localization
 			console.log(`Started deploying service "${deploymentInfo.name}".`)
@@ -34,18 +35,18 @@ export class Deployer {
 			let deployment = tl.exec("az", azArgs)
 				.then(
 					result => {
-						console.log(`${deploymentInfo.name}: service is deployed.`)
+						console.log(`${deploymentInfo.name}: Service is deployed.`)
 					},
 					error => {
 						result = false;
 						if (this.debug) {
 							console.error(error);
 						}
-						tl.error(`${deploymentInfo.name}: failed to deploy service.`);
+						tl.error(`${deploymentInfo.name}: Failed to deploy service.`);
 					}
 				);
 			deployments.push(deployment);
-		}
+		});
 		await Promise.all(deployments);
 		return result;
 	}
