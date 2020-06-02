@@ -64,10 +64,10 @@ export class azureclitask {
 	}
 
 	private static loadSettings(): Settings {
-		var appTypeStr: string = tl.getInput("AppType", true);
+		var appTypeStr = tl.getInput("AppType", false);
 		var appType: AppType = AppType[appTypeStr];
-		if (appTypeStr == undefined) {
-			appTypeStr = AppType.WebApp;
+		if (appType == undefined) {
+			appType = AppType.WebApp;
 		}
 		var resourceGroup: string = tl.getInput("ResourceGroup", true);
 		var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);

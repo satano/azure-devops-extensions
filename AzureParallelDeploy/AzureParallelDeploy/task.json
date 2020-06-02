@@ -43,8 +43,8 @@
 				"FunctionApp": "Function App"
 			},
 			"defaultValue": "WebApp",
-			"required": true,
-			"helpMarkDown": "Type of applications to deploy. All deployed applications must be of the same type."
+			"required": false,
+			"helpMarkDown": "Type of applications to deploy. All deployed applications must be of the same type. If the value is not set, Web application ('WebApp') is used."
 		},
 		{
 			"name": "Services",
