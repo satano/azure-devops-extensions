@@ -1,6 +1,6 @@
 import tl = require("azure-pipelines-task-lib/task");
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { ServiceInfo } from './ServiceInfo'
+import { ServiceInfo } from './Interfaces'
 
 export class Utility {
 

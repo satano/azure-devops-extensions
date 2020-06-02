@@ -1,24 +1,20 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import { ServiceInfo } from './ServiceInfo'
+import { AppType, ServiceInfo, Settings } from './Interfaces'
 import { Utility } from "./Utility";
 
 export class Deployer {
 
-	public constructor(
-		resourceGroup: string,
-		artifactsPath: string,
-		appNameFormat: string,
-		appPathFormat: string,
-		debug: Boolean) {
-
-		this.resourceGroup = resourceGroup;
-		this.artifactsPath = artifactsPath;
-		this.appNameFormat = appNameFormat;
-		this.appPathFormat = appPathFormat;
+	public constructor(settings: Settings, debug: Boolean) {
+		this.appType = settings.appType;
+		this.resourceGroup = settings.resourceGroup;
+		this.artifactsPath = settings.artifactsPath;
+		this.appNameFormat = settings.appNameFormat;
+		this.appPathFormat = settings.appPathFormat;
 		this.debug = debug;
 	}
 
+	public readonly appType: AppType;
 	public readonly resourceGroup: string;
 	public readonly artifactsPath: string;
 	public readonly appNameFormat: string;
@@ -35,7 +31,8 @@ export class Deployer {
 			console.log(`  Service source: ${deploymentInfo.sourcePath}`);
 			console.log(`  Azure service name: ${deploymentInfo.targetService}`)
 
-			var azArgs = "webapp deployment source config-zip" +
+			var command = this.appType == AppType.FunctionApp ? "functionapp" : "webapp";
+			var azArgs = `${command} deployment source config-zip` +
 				` --resource-group ${this.resourceGroup}` +
 				` --name ${deploymentInfo.targetService}` +
 				` --src "${deploymentInfo.sourcePath}"`;

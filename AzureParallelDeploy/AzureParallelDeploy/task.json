@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 45
+		"Patch": 46
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -33,6 +33,18 @@
 			"properties": {
 				"EndpointFilterRule": "ScopeLevel != ManagementGroup"
 			}
+		},
+		{
+			"name": "AppType",
+			"type": "radio",
+			"label": "Application type",
+			"options": {
+				"WebApp": "Web App",
+				"FunctionApp": "Function App"
+			},
+			"defaultValue": "WebApp",
+			"required": true,
+			"helpMarkDown": "Type of applications to deploy. All deployed applications must be of the same type."
 		},
 		{
 			"name": "Services",

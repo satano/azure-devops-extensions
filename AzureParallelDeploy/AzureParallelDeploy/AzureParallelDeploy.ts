@@ -3,7 +3,8 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { Utility } from "./src/Utility";
 import { Deployer } from "./src/Deployer";
-import { ServiceInfo } from "./src/ServiceInfo";
+import { AppType, ServiceInfo, Settings } from "./src/Interfaces";
+import { throws } from "assert";
 
 export class azureclitask {
 
@@ -11,8 +12,6 @@ export class azureclitask {
 		var toolExecutionError = null;
 		var exitCode: number = 0;
 		try {
-			var debug: boolean = !!tl.getTaskVariable("System.Debug");
-
 			Utility.throwIfError(tl.execSync("az", "--version"));
 			// Set az cli config dir.
 			this.setConfigDirectory();
@@ -20,24 +19,14 @@ export class azureclitask {
 			var connectedService: string = tl.getInput("ConnectedServiceName", true);
 			this.loginAzureRM(connectedService);
 
+			var debug: boolean = !!tl.getTaskVariable("System.Debug");
 			var services: string = tl.getInput("Services", true);
-			var resourceGroup: string = tl.getInput("ResourceGroup", true);
-			var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
-			var appNameFormat: string = tl.getInput("AppNameFormat", true);
-			var appPathFormat: string = tl.getInput("AppPathFormat", true);
-
-			console.log("Input parameters");
-			console.log("----------------");
-			console.log(`resourceGroup: ${resourceGroup}`);
-			console.log(`artifactsPath: ${artifactsPath}`);
-			console.log(`appNameFormat: ${appNameFormat}`);
-			console.log(`appPathFormat: ${appPathFormat}`);
-			console.log(`services: ${services}`);
-			console.log("----------------");
+			var settings = this.loadSettings();
+			this.logSettings(settings, services);
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
-			var deployer = new Deployer(resourceGroup, artifactsPath, appNameFormat, appPathFormat, debug);
+			var deployer = new Deployer(settings, debug);
 			var serviceInfos: ServiceInfo[] = Utility.parseServices(services);
 			var result: Boolean = await deployer.deployWebApps(serviceInfos);
 			console.timeEnd(deployTimeLog);
@@ -72,6 +61,37 @@ export class azureclitask {
 				this.logoutAzure();
 			}
 		}
+	}
+
+	private static loadSettings(): Settings {
+		var appTypeStr: string = tl.getInput("AppType", true);
+		var appType: AppType = AppType[appTypeStr];
+		if (appTypeStr == undefined) {
+			appTypeStr = AppType.WebApp;
+		}
+		var resourceGroup: string = tl.getInput("ResourceGroup", true);
+		var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
+		var appNameFormat: string = tl.getInput("AppNameFormat", true);
+		var appPathFormat: string = tl.getInput("AppPathFormat", true);
+		return {
+			appType: appType,
+			resourceGroup: resourceGroup,
+			artifactsPath: artifactsPath,
+			appNameFormat: appNameFormat,
+			appPathFormat: appPathFormat
+		};
+	}
+
+	private static logSettings(settings: Settings, services: string) {
+		console.log("Input parameters");
+		console.log("----------------");
+		console.log(`AppType: ${settings.resourceGroup}`);
+		console.log(`ResourceGroup: ${settings.resourceGroup}`);
+		console.log(`ArtifactsPath: ${settings.artifactsPath}`);
+		console.log(`AppNameFormat: ${settings.appNameFormat}`);
+		console.log(`AppPathFormat: ${settings.appPathFormat}`);
+		console.log(`Services: ${services}`);
+		console.log("----------------");
 	}
 
 	private static isLoggedIn: boolean = false;
