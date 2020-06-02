@@ -73,12 +73,14 @@ export class azureclitask {
 		var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
 		var appNameFormat: string = tl.getInput("AppNameFormat", true);
 		var appPathFormat: string = tl.getInput("AppPathFormat", true);
+		var slotName: string = tl.getInput("SlotName", false);
 		return {
 			appType: appType,
 			resourceGroup: resourceGroup,
 			artifactsPath: artifactsPath,
 			appNameFormat: appNameFormat,
-			appPathFormat: appPathFormat
+			appPathFormat: appPathFormat,
+			slotName: slotName
 		};
 	}
 
@@ -90,6 +92,7 @@ export class azureclitask {
 		console.log(`ArtifactsPath: ${settings.artifactsPath}`);
 		console.log(`AppNameFormat: ${settings.appNameFormat}`);
 		console.log(`AppPathFormat: ${settings.appPathFormat}`);
+		console.log(`SlotName: ${settings.slotName}`);
 		console.log(`Services: ${services}`);
 		console.log("----------------");
 	}

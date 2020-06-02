@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 46
+		"Patch": 47
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -88,6 +88,14 @@
 			"defaultValue": "{0}/{1}.zip",
 			"required": true,
 			"helpMarkDown": "Format string for path to source ZIP file for services. Every service is deployed as ZIP file. The format string accepts two parameters. Parameter `{0}` is replaced by artifacts path, parameter `{1}` is replaced by logical service name. For example if format string is `{0}/publish/Company.{1}.zip` and logical service name is `forecast`, deployed file path will be `.../publish/Company.forecast.zip`. The three dots will be the path set in *Artifacts path*."
+		},
+		{
+			"name": "SlotName",
+			"type": "string",
+			"label": "Slot name",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "The name of the slot for deployment."
 		}
 	],
 	"dataSourceBindings": [

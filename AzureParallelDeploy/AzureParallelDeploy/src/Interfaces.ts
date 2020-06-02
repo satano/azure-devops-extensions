@@ -15,4 +15,5 @@ export interface Settings {
 	artifactsPath: string;
 	appNameFormat: string;
 	appPathFormat: string;
+	slotName: string;
 }
