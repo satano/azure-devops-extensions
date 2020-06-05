@@ -8,8 +8,8 @@ export class Utility {
 			return [];
 		}
 		return source.split(/[,;\n\r]/)
-			.filter(value => !this.isNullOrWhitespace(value))
-			.map(value => this.trimQuotes(value.trim()));
+			.map(value => this.trimServiceName(value))
+			.filter(value => !this.isNullOrWhitespace(value));
 	}
 
 	public static formatString(format: string, ...args: any[]) {
@@ -27,11 +27,11 @@ export class Utility {
 		return value.match(/^\s*$/g) !== null;
 	}
 
-	public static trimQuotes(input: string) {
-		return this.trimChars(input, "\"\'");
+	public static trimServiceName(input: string): string {
+		return this.trimChars(input, "\\s\"\'");
 	}
 
-	public static trimChars(input: string, chars: string) {
+	public static trimChars(input: string, chars: string): string {
 		if (input == null) {
 			return input;
 		}

@@ -57,7 +57,7 @@ console.log(test(undefined));
 console.log("---");
 console.log(test("lorem,ipsum,dolor"));
 console.log("---");
-console.log(test("lorem, 'ipsum', dolor"));
+console.log(test("lorem, \" '  ipsum' \", dolor"));
 console.log("---");
 console.log(test("lorem;ipsum;dolor"));
 console.log("---");
