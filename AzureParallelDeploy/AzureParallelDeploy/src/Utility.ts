@@ -1,48 +1,15 @@
 import tl = require("azure-pipelines-task-lib/task");
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { ServiceInfo } from './Interfaces'
 
 export class Utility {
 
-	public static parseServices(source: string): ServiceInfo[] {
-		var parsed: any[] = JSON.parse(source);
-
-		var services: ServiceInfo[] = parsed.map((item: any, index: number, array: object[]) => {
-			var serviceInfo: ServiceInfo = null;
-			if (typeof item == "string") {
-				var name = (item as string).trim();
-				if (name == "") {
-					throw new Error(this.getServicesInputErrorMsg(item));
-				}
-				serviceInfo = { name: item, targetService: "", sourcePath: "" };
-			} else if ((typeof item == "object") && (!Array.isArray(item))) {
-				var name: string = ("name" in item) ? (item.name as string).trim() : "";
-				var targetService: string = ("targetService" in item) ? (item.targetService as string).trim() : "";
-				var sourcePath: string = ("sourcePath" in item) ? (item.sourcePath as string).trim() : "";
-				if (name == "") {
-					name = targetService;
-				}
-				if (name == "") {
-					throw new Error(this.getServicesInputErrorMsg(item));
-				}
-				serviceInfo = { name: name, targetService: targetService, sourcePath: sourcePath };
-			}
-			if (serviceInfo == null) {
-				throw new Error(this.getServicesInputErrorMsg(item));
-			}
-			return serviceInfo;
-		});
-
-		return services;
-	}
-
-	private static getServicesInputErrorMsg(item: any): string {
-		const msg = "Invalid input JSON for services. JSON must be an array, " +
-			"containing only strings or objects (no nested arrays).\n" +
-			"If object is used, it must have at least one of \'name\' or \'targetService\' keys defined.\n" +
-			"Invalid element: \n\n";
-
-		return msg + JSON.stringify(item, null, 2);
+	public static parseServices(source: string): string[] {
+		if (source == null) {
+			return [];
+		}
+		return source.split(/[,;\n\r]/)
+			.filter(value => !this.isNullOrWhitespace(value))
+			.map(value => this.trimQuotes(value.trim()));
 	}
 
 	public static formatString(format: string, ...args: any[]) {
@@ -58,6 +25,21 @@ export class Utility {
 			return true;
 		}
 		return value.match(/^\s*$/g) !== null;
+	}
+
+	public static trimQuotes(input: string) {
+		return this.trimChars(input, "\"\'");
+	}
+
+	public static trimChars(input: string, chars: string) {
+		if (input == null) {
+			return input;
+		}
+		if (typeof chars == null) {
+			chars = '\\s';
+		}
+		var pattern = '^[' + chars + ']*(.*?)[' + chars + ']*$';
+		return input.replace(new RegExp(pattern), '$1');
 	}
 
 	public static checkIfAzurePythonSdkIsInstalled() {

@@ -1,6 +1,6 @@
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import { AppType, ServiceInfo, Settings } from './Interfaces'
+import { AppType, DeploymentInfo, Settings } from './Interfaces'
 import { Utility } from "./Utility";
 
 export class Deployer {
@@ -13,12 +13,12 @@ export class Deployer {
 	public readonly settings: Settings;
 	public readonly debug: boolean;
 
-	public async deployWebApps(services: ServiceInfo[]): Promise<boolean> {
+	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
 
-		services.forEach((service: ServiceInfo, index: number, array: ServiceInfo[]) => {
-			var deploymentInfo: ServiceInfo = this.createDeploymentInfo(service);
+		services.forEach(service => {
+			var deploymentInfo: DeploymentInfo = this.createDeploymentInfo(service);
 			// TODO: localization
 			console.log(`Started deploying service "${deploymentInfo.name}".`)
 			console.log(`  Service source: ${deploymentInfo.sourcePath}`);
@@ -51,23 +51,14 @@ export class Deployer {
 		return result;
 	}
 
-	private createDeploymentInfo(service: ServiceInfo): ServiceInfo {
-		var sourcePath: string;
-		if (service.sourcePath == "") {
-			sourcePath = Utility.isNullOrWhitespace(this.settings.appPathFormat)
-				? path.join(this.settings.artifactsPath, `${service.name}.zip`)
-				: Utility.formatString(this.settings.appPathFormat, this.settings.artifactsPath, service.name);
-		} else {
-			sourcePath = path.join(this.settings.artifactsPath, service.sourcePath);
-		}
+	private createDeploymentInfo(service: string): DeploymentInfo {
+		var sourcePath: string = Utility.isNullOrWhitespace(this.settings.appPathFormat)
+			? path.join(this.settings.artifactsPath, `${service}.zip`)
+			: Utility.formatString(this.settings.appPathFormat, this.settings.artifactsPath, service);
+		var targetService: string = Utility.isNullOrWhitespace(this.settings.appNameFormat)
+			? service
+			: Utility.formatString(this.settings.appNameFormat, service);
 
-		var targetService: string = service.targetService;
-		if (targetService == "") {
-			targetService = Utility.isNullOrWhitespace(this.settings.appNameFormat)
-				? service.name
-				: Utility.formatString(this.settings.appNameFormat, service.name);
-		}
-
-		return { name: service.name, targetService: targetService, sourcePath: sourcePath }
+		return { name: service, targetService: targetService, sourcePath: sourcePath }
 	}
 }

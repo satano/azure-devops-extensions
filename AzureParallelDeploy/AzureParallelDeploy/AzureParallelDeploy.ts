@@ -3,7 +3,7 @@ import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import { Utility } from "./src/Utility";
 import { Deployer } from "./src/Deployer";
-import { AppType, ServiceInfo, Settings } from "./src/Interfaces";
+import { AppType, Settings } from "./src/Interfaces";
 
 export class azureclitask {
 
@@ -26,7 +26,7 @@ export class azureclitask {
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
 			var deployer = new Deployer(settings, debug);
-			var serviceInfos: ServiceInfo[] = Utility.parseServices(services);
+			var serviceInfos: string[] = Utility.parseServices(services);
 			deploymentResult = await deployer.deployWebApps(serviceInfos);
 			console.timeEnd(deployTimeLog);
 		}

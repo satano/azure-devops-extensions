@@ -36,10 +36,32 @@ var services: string = `[
 		"sourcePath": ""
 	}
 ]`;
-var data: ServiceInfo[] = Utility.ParseServices(services);
+// var data: ServiceInfo[] = Utility.parseServices(services);
 
-for (const item  of data) {
-	console.log(item.targetService);
+// for (const item  of data) {
+// 	console.log(item.targetService);
 
+// }
+// console.log(data);
+
+console.log(null == undefined);
+console.log(null === undefined);
+
+function test(input: string): string[] {
+	return Utility.parseServices(input);
 }
-console.log(data);
+
+console.log(test(null));
+console.log("---");
+console.log(test(undefined));
+console.log("---");
+console.log(test("lorem,ipsum,dolor"));
+console.log("---");
+console.log(test("lorem, 'ipsum', dolor"));
+console.log("---");
+console.log(test("lorem;ipsum;dolor"));
+console.log("---");
+console.log(test("lorem\nipsum\ndolor"));
+console.log("---");
+console.log(test("lorem\r\nipsum\r\ndolor"));
+console.log("---");
