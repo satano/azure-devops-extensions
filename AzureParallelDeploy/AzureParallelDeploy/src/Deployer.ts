@@ -52,9 +52,10 @@ export class Deployer {
 	}
 
 	private createDeploymentInfo(service: string): DeploymentInfo {
-		var sourcePath: string = Utility.isNullOrWhitespace(this.settings.appPathFormat)
-			? path.join(this.settings.artifactsPath, `${service}.zip`)
-			: Utility.formatString(this.settings.appPathFormat, this.settings.artifactsPath, service);
+		var sourcePath: string = Utility.isNullOrWhitespace(this.settings.appSourceFormat)
+			? `${service}.zip`
+			: Utility.formatString(this.settings.appSourceFormat, service);
+		sourcePath = path.join(this.settings.appSourceBasePath, sourcePath)
 		var targetService: string = Utility.isNullOrWhitespace(this.settings.appNameFormat)
 			? service
 			: Utility.formatString(this.settings.appNameFormat, service);

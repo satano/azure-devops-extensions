@@ -64,16 +64,19 @@ export class azureclitask {
 			appType = AppType.WebApp;
 		}
 		var resourceGroup: string = tl.getInput("ResourceGroup", true);
-		var artifactsPath: string = tl.getPathInput("ArtifactsPath", true);
+		var appSourceBasePath: string = tl.getPathInput("ArtifactsPath", false);
+		if (Utility.isNullOrWhitespace(appSourceBasePath)) {
+			appSourceBasePath = tl.getTaskVariable("System.DefaultWorkingDirectory");
+		}
 		var appNameFormat: string = tl.getInput("AppNameFormat", true);
-		var appPathFormat: string = tl.getInput("AppPathFormat", true);
+		var appSourceFormat: string = tl.getInput("AppSourceFormat", true);
 		var slotName: string = tl.getInput("SlotName", false);
 		return {
 			appType: appType,
 			resourceGroup: resourceGroup,
-			artifactsPath: artifactsPath,
+			appSourceBasePath: appSourceBasePath,
 			appNameFormat: appNameFormat,
-			appPathFormat: appPathFormat,
+			appSourceFormat: appSourceFormat,
 			slotName: slotName
 		};
 	}

@@ -35,6 +35,17 @@
 			}
 		},
 		{
+			"name": "ResourceGroup",
+			"type": "pickList",
+			"label": "Resource group",
+			"defaultValue": "",
+			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
+			"helpMarkDown": "Resource group name in Azure Portal."
+		},
+		{
 			"name": "AppType",
 			"type": "radio",
 			"label": "Application type",
@@ -52,42 +63,31 @@
 			"label": "Services",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Information about services to deploy. Info is a JSON string, in the simplest form it is an array of logical service names ('[ \"svc1\", \"svc2\" ]')."
-		},
-		{
-			"name": "ResourceGroup",
-			"type": "pickList",
-			"label": "Resource group",
-			"defaultValue": "",
-			"required": true,
-			"properties": {
-				"EditableOptions": "True"
-			},
-			"helpMarkDown": "Resource group name in Azure Portal."
-		},
-		{
-			"name": "ArtifactsPath",
-			"type": "filePath",
-			"label": "Artifacts path",
-			"defaultValue": "$(System.DefaultWorkingDirectory)",
-			"required": true,
-			"helpMarkDown": "Base path for services' source files. Services are deployed from ZIP files."
+			"helpMarkDown": "Logical names of the services to deploy. The names are separated by new line, comma (`,`)or semicolon (`;`). After splitting the list, the quotes (both, single and double) and whitespace characters are trimmed from the names. So the list **svc1, \"svc2\"; 'svc3 '**. will result in the list od names **svc1**, **svc2**, **svc3**."
 		},
 		{
 			"name": "AppNameFormat",
 			"type": "string",
-			"label": "Format string for application name",
-			"defaultValue": "{0}-api",
-			"required": true,
-			"helpMarkDown": "Format string for creating app service name in Azure Portal. Format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if format string is `prod-{0}-api` and logical service name is `forecast`, the service will be deployed to `prod-forecast-api` app service."
+			"label": "Azure application name format string",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "Format string for app service name in Azure Portal. Format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if format string is `prod-{0}-api` and logical service name is `forecast`, the application will be deployed to `prod-forecast-api` app service. If the value is not set, \"{0}\" will be used."
 		},
 		{
-			"name": "AppPathFormat",
+			"name": "AppSourceFormat",
 			"type": "string",
-			"label": "Format string for application source",
-			"defaultValue": "{0}/{1}.zip",
-			"required": true,
-			"helpMarkDown": "Format string for path to source ZIP file for services. Every service is deployed as ZIP file. The format string accepts two parameters. Parameter `{0}` is replaced by artifacts path, parameter `{1}` is replaced by logical service name. For example if format string is `{0}/publish/Company.{1}.zip` and logical service name is `forecast`, deployed file path will be `.../publish/Company.forecast.zip`. The three dots will be the path set in *Artifacts path*."
+			"label": "Application source file format string",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "Format string for path to source ZIP file for services. Every service is deployed from ZIP file. The format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if this format string is `{0}-api.zip` and logical service name is `forecast`, source file path will be `forecast-api.zip`. \"zip\" extension must be specified expplicitly. If the value is not set, \"{0}.zip\" will be used."
+		},
+		{
+			"name": "AppSourceBasePath",
+			"type": "filePath",
+			"label": "Application source base path",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "Base path for services' source files. If not set, agent's default working directory is used (predefined variable `System.DefaultWorkingDirectory`). Services are deployed from ZIP files. These files are  "
 		},
 		{
 			"name": "SlotName",
@@ -95,7 +95,7 @@
 			"label": "Slot name",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "The name of the slot for deployment."
+			"helpMarkDown": "The name of the slot for deployment. The slot name is used for all deployed services."
 		}
 	],
 	"dataSourceBindings": [

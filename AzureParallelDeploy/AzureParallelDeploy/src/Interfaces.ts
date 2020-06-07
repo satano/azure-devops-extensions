@@ -12,8 +12,8 @@ export interface DeploymentInfo {
 export interface Settings {
 	appType: AppType;
 	resourceGroup: string;
-	artifactsPath: string;
+	appSourceBasePath: string;
 	appNameFormat: string;
-	appPathFormat: string;
+	appSourceFormat: string;
 	slotName: string;
 }
