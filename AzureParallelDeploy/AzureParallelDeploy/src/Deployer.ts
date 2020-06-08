@@ -17,7 +17,8 @@ export class Deployer {
 		var deployments: Q.Promise<void>[] = [];
 
 		console.log(`Deploying services...`);
-		console.log(`Base folder for services' source files is: ${this.settings.appSourceBasePath}`);
+		console.log(`Base folder for services' source files is: "${this.settings.appSourceBasePath}"`);
+		console.log("");
 
 		services.forEach(service => {
 			service = service.trim();
@@ -25,6 +26,7 @@ export class Deployer {
 			var sourceFileName = Utility.formatString(this.settings.appSourceFormat, service);
 
 			// TODO: localization
+			console.log("");
 			console.log(`Started deploying service "${service}".`)
 			console.log(`  Service source filename: ${sourceFileName}`);
 			console.log(`  Azure service name: ${targetService}`)
@@ -32,13 +34,13 @@ export class Deployer {
 			var sourceFiles = tl.findMatch(this.settings.appSourceBasePath, `**/${sourceFileName}`);
 			if (sourceFiles.length == 0) {
 				result = false;
-				console.error(`Did not find source file "${sourceFileName}" for service "${service}".`);
+				Utility.logError(`Did not find source file "${sourceFileName}" for service "${service}".`);
 				return;
 			} else if (sourceFiles.length > 1) {
 				result = false;
-				console.error(`Found more than one source file "${sourceFileName}" for service "${service}".`);
+				Utility.logError(`Found more than one source file "${sourceFileName}" for service "${service}".`);
 				for (const file of sourceFiles) {
-					console.log(`  ${file}`);
+					console.error(`  - ${file}`);
 				}
 				return;
 			}
@@ -60,7 +62,7 @@ export class Deployer {
 					error => {
 						result = false;
 						if (this.debug) {
-							console.error(error);
+							Utility.logError(error);
 						}
 						tl.error(`${service}: Failed to deploy service.`);
 					}

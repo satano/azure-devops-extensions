@@ -3,6 +3,10 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export class Utility {
 
+	public static logError(message: string) {
+		console.error(`[error] ${message}`);
+	}
+
 	public static formatString(format: string, ...args: any[]) {
 		return format.replace(/{(\d+)}/g, function (match, number) {
 			return typeof args[number] != undefined

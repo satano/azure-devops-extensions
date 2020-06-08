@@ -1,5 +1,4 @@
 import tl = require("azure-pipelines-task-lib/task");
-import { ServiceInfo } from "./src/ServiceInfo"
 import { Utility } from "./src/Utility";
 
 var basePath = "d:\\proj\\github\\satano\\azure-devops-extensions\\_test";

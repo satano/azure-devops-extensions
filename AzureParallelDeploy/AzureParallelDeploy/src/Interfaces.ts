@@ -6,8 +6,8 @@ export enum AppType {
 export interface Settings {
 	appType: AppType;
 	resourceGroup: string;
-	appSourceBasePath: string;
 	appNameFormat: string;
 	appSourceFormat: string;
+	appSourceBasePath: string;
 	slotName: string;
 }

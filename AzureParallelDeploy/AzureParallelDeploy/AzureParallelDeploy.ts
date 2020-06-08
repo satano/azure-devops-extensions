@@ -26,6 +26,7 @@ export class azureparalleldeploytask {
 			var servicesRaw: string = tl.getInput("Services", true);
 			var services: string[] = tl.getDelimitedInput("Services", "\n");
 			console.log(`Services: "${servicesRaw}"`)
+			console.log("");
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
