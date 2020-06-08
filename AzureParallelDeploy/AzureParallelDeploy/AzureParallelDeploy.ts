@@ -5,7 +5,10 @@ import { Utility } from "./src/Utility";
 import { Deployer } from "./src/Deployer";
 import { AppType, Settings } from "./src/Interfaces";
 
-export class azureclitask {
+export class azureparalleldeploytask {
+
+	private static DefaultAppNameFormat: string = "{0}";
+	private static DefaultAppSourceFormat: string = "{0}.zip";
 
 	public static async runMain(): Promise<void> {
 		var deploymentResult: boolean = undefined;
@@ -19,15 +22,15 @@ export class azureclitask {
 			this.loginAzureRM(connectedService);
 
 			var debug: boolean = !!tl.getTaskVariable("System.Debug");
-			var services: string = tl.getInput("Services", true);
 			var settings = this.loadSettings();
-			this.logSettings(settings, services);
+			var servicesRaw: string = tl.getInput("Services", true);
+			var services: string[] = tl.getDelimitedInput("Services", "\n");
+			console.log(`Services: "${servicesRaw}"`)
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
 			var deployer = new Deployer(settings, debug);
-			var serviceInfos: string[] = Utility.parseServices(services);
-			deploymentResult = await deployer.deployWebApps(serviceInfos);
+			deploymentResult = await deployer.deployWebApps(services);
 			console.timeEnd(deployTimeLog);
 		}
 		catch (err) {
@@ -58,19 +61,52 @@ export class azureclitask {
 	}
 
 	private static loadSettings(): Settings {
+		const defaultValueUsed = " (parameter not set, using default value)";
+		const defaultWorkingDirectoryUsed = " (parameter not set, using 'System.DefaultWorkingDirectory')";
+		console.log("Initializing settings...")
+
+		var additionalInfo: string = "";
 		var appTypeStr = tl.getInput("AppType", false);
 		var appType: AppType = AppType[appTypeStr];
 		if (appType == undefined) {
 			appType = AppType.WebApp;
+			additionalInfo = defaultValueUsed;
 		}
+		console.log(`AppType: ${appType}${additionalInfo}`)
+
 		var resourceGroup: string = tl.getInput("ResourceGroup", true);
-		var appSourceBasePath: string = tl.getPathInput("ArtifactsPath", false);
-		if (Utility.isNullOrWhitespace(appSourceBasePath)) {
-			appSourceBasePath = tl.getTaskVariable("System.DefaultWorkingDirectory");
+		console.log(`ResourceGroup: ${resourceGroup}`)
+
+		additionalInfo = "";
+		var appNameFormat: string = tl.getInput("AppNameFormat", false);
+		if (Utility.isNullOrWhitespace(appNameFormat)) {
+			appNameFormat = azureparalleldeploytask.DefaultAppNameFormat;
+			additionalInfo = defaultValueUsed;
 		}
-		var appNameFormat: string = tl.getInput("AppNameFormat", true);
-		var appSourceFormat: string = tl.getInput("AppSourceFormat", true);
+		console.log(`AppNameFormat: ${appNameFormat}${additionalInfo}`)
+
+		additionalInfo = "";
+		var appSourceFormat: string = tl.getInput("AppSourceFormat", false);
+		if (Utility.isNullOrWhitespace(appSourceFormat)) {
+			appSourceFormat = azureparalleldeploytask.DefaultAppSourceFormat;
+			additionalInfo = defaultValueUsed;
+		}
+		console.log(`AppSourceFormat: ${appSourceFormat}${additionalInfo}`)
+
+		additionalInfo = "";
+		var appSourceBasePath: string = tl.getPathInput("AppSourceBasePath", false);
+		if (Utility.isNullOrWhitespace(appSourceBasePath)) {
+			appSourceBasePath = tl.getVariable("System.DefaultWorkingDirectory");
+			additionalInfo = defaultWorkingDirectoryUsed;
+		}
+		console.log(`AppSourceBasePath: "${appSourceBasePath}"${additionalInfo}`)
+
 		var slotName: string = tl.getInput("SlotName", false);
+		if (slotName == null) {
+			slotName = "";
+		}
+		console.log(`SlotName: ${slotName}`)
+
 		return {
 			appType: appType,
 			resourceGroup: resourceGroup,
@@ -79,19 +115,6 @@ export class azureclitask {
 			appSourceFormat: appSourceFormat,
 			slotName: slotName
 		};
-	}
-
-	private static logSettings(settings: Settings, services: string) {
-		console.log("Input parameters");
-		console.log("----------------");
-		console.log(`AppType: ${settings.resourceGroup}`);
-		console.log(`ResourceGroup: ${settings.resourceGroup}`);
-		console.log(`ArtifactsPath: ${settings.artifactsPath}`);
-		console.log(`AppNameFormat: ${settings.appNameFormat}`);
-		console.log(`AppPathFormat: ${settings.appPathFormat}`);
-		console.log(`SlotName: ${settings.slotName}`);
-		console.log(`Services: ${services}`);
-		console.log("----------------");
 	}
 
 	private static isLoggedIn: boolean = false;
@@ -173,4 +196,4 @@ if (!Utility.checkIfAzurePythonSdkIsInstalled()) {
 	tl.setResult(tl.TaskResult.Failed, tl.loc("AzureSDKNotFound"));
 }
 
-azureclitask.runMain();
+azureparalleldeploytask.runMain();

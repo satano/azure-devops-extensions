@@ -1,6 +1,5 @@
-import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import { AppType, DeploymentInfo, Settings } from './Interfaces'
+import { AppType, Settings } from './Interfaces'
 import { Utility } from "./Utility";
 
 export class Deployer {
@@ -17,12 +16,33 @@ export class Deployer {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
 
+		console.log(`Deploying services...`);
+		console.log(`Base folder for services' source files is: ${this.settings.appSourceBasePath}`);
+
 		services.forEach(service => {
-			var deploymentInfo: DeploymentInfo = this.createDeploymentInfo(service);
+			service = service.trim();
+			var targetService = Utility.formatString(this.settings.appNameFormat, service);
+			var sourceFileName = Utility.formatString(this.settings.appSourceFormat, service);
+
 			// TODO: localization
-			console.log(`Started deploying service "${deploymentInfo.name}".`)
-			console.log(`  Service source: ${deploymentInfo.sourcePath}`);
-			console.log(`  Azure service name: ${deploymentInfo.targetService}`)
+			console.log(`Started deploying service "${service}".`)
+			console.log(`  Service source filename: ${sourceFileName}`);
+			console.log(`  Azure service name: ${targetService}`)
+
+			var sourceFiles = tl.findMatch(this.settings.appSourceBasePath, `**/${sourceFileName}`);
+			if (sourceFiles.length == 0) {
+				result = false;
+				console.error(`Did not find source file "${sourceFileName}" for service "${service}".`);
+				return;
+			} else if (sourceFiles.length > 1) {
+				result = false;
+				console.error(`Found more than one source file "${sourceFileName}" for service "${service}".`);
+				for (const file of sourceFiles) {
+					console.log(`  ${file}`);
+				}
+				return;
+			}
+			console.log(`Using source file: ${sourceFiles[0]}`);
 
 			var command = this.settings.appType == AppType.FunctionApp ? "functionapp" : "webapp";
 			var slotNameParam = Utility.isNullOrWhitespace(this.settings.slotName)
@@ -30,36 +50,24 @@ export class Deployer {
 				: ` --slot ${this.settings.slotName}`;
 			var azArgs = `${command} deployment source config-zip` +
 				` --resource-group ${this.settings.resourceGroup}` +
-				` --name ${deploymentInfo.targetService}${slotNameParam}` +
-				` --src "${deploymentInfo.sourcePath}"`;
+				` --name ${targetService}${slotNameParam}` +
+				` --src "${sourceFiles[0]}"`;
 			let deployment = tl.exec("az", azArgs)
 				.then(
 					result => {
-						console.log(`${deploymentInfo.name}: Service is deployed.`)
+						console.log(`${service}: Service is deployed.`)
 					},
 					error => {
 						result = false;
 						if (this.debug) {
 							console.error(error);
 						}
-						tl.error(`${deploymentInfo.name}: Failed to deploy service.`);
+						tl.error(`${service}: Failed to deploy service.`);
 					}
 				);
 			deployments.push(deployment);
 		});
 		await Promise.all(deployments);
 		return result;
-	}
-
-	private createDeploymentInfo(service: string): DeploymentInfo {
-		var sourcePath: string = Utility.isNullOrWhitespace(this.settings.appSourceFormat)
-			? `${service}.zip`
-			: Utility.formatString(this.settings.appSourceFormat, service);
-		sourcePath = path.join(this.settings.appSourceBasePath, sourcePath)
-		var targetService: string = Utility.isNullOrWhitespace(this.settings.appNameFormat)
-			? service
-			: Utility.formatString(this.settings.appNameFormat, service);
-
-		return { name: service, targetService: targetService, sourcePath: sourcePath }
 	}
 }

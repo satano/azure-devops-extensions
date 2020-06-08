@@ -3,15 +3,6 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 export class Utility {
 
-	public static parseServices(source: string): string[] {
-		if (source == null) {
-			return [];
-		}
-		return source.split(/[,;\n\r]/)
-			.map(value => this.trimServiceName(value))
-			.filter(value => !this.isNullOrWhitespace(value));
-	}
-
 	public static formatString(format: string, ...args: any[]) {
 		return format.replace(/{(\d+)}/g, function (match, number) {
 			return typeof args[number] != undefined
@@ -25,21 +16,6 @@ export class Utility {
 			return true;
 		}
 		return value.match(/^\s*$/g) !== null;
-	}
-
-	public static trimServiceName(input: string): string {
-		return this.trimChars(input, "\\s\"\'");
-	}
-
-	public static trimChars(input: string, chars: string): string {
-		if (input == null) {
-			return input;
-		}
-		if (typeof chars == null) {
-			chars = '\\s';
-		}
-		var pattern = '^[' + chars + ']*(.*?)[' + chars + ']*$';
-		return input.replace(new RegExp(pattern), '$1');
 	}
 
 	public static checkIfAzurePythonSdkIsInstalled() {

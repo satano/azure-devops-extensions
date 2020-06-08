@@ -3,12 +3,6 @@ export enum AppType {
 	FunctionApp = "FunctionApp"
 }
 
-export interface DeploymentInfo {
-	name: string;
-	targetService: string;
-	sourcePath: string;
-}
-
 export interface Settings {
 	appType: AppType;
 	resourceGroup: string;

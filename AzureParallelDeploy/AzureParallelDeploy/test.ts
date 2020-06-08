@@ -1,67 +1,28 @@
+import tl = require("azure-pipelines-task-lib/task");
 import { ServiceInfo } from "./src/ServiceInfo"
 import { Utility } from "./src/Utility";
 
-var services: string = `[
-	"api1",
-	"api2",
-	{
-		"name": "api3",
-		"targetService": "api3-TARGET",
-		"sourcePath": "api3-SOURCE"
-	},
-	"api4",
-	{
-		"name": "api5"
-	},
-	{
-		"name": "api6",
-		"targetService": "api6-TARGET",
-		"sourcePath": "",
-		"chujovinu": "lortem"
-	},
-	"api7",
-	{
-		"name": "api8",
-		"targetService": "",
-		"sourcePath": "api8-SOURCE"
-	},
-	{
-		"name": "api9",
-		"targetService": "",
-		"sourcePath": ""
-	},
-	{
-		"name": "api9",
-		"targetService": "",
-		"sourcePath": ""
-	}
-]`;
-// var data: ServiceInfo[] = Utility.parseServices(services);
+var basePath = "d:\\proj\\github\\satano\\azure-devops-extensions\\_test";
+var fileName = "README.md";
 
-// for (const item  of data) {
-// 	console.log(item.targetService);
+var files = tl.findMatch(basePath, "**/" + fileName);
 
-// }
-// console.log(data);
-
-console.log(null == undefined);
-console.log(null === undefined);
-
-function test(input: string): string[] {
-	return Utility.parseServices(input);
+for (const file of files) {
+	console.log(file);
 }
 
-console.log(test(null));
-console.log("---");
-console.log(test(undefined));
-console.log("---");
-console.log(test("lorem,ipsum,dolor"));
-console.log("---");
-console.log(test("lorem, \" '  ipsum' \", dolor"));
-console.log("---");
-console.log(test("lorem;ipsum;dolor"));
-console.log("---");
-console.log(test("lorem\nipsum\ndolor"));
-console.log("---");
-console.log(test("lorem\r\nipsum\r\ndolor"));
-console.log("---");
+var s = "";
+
+console.log(`s is "" | s == null: ${s == null}`)
+console.log(`s is "" | s == undefined: ${s == undefined}`)
+console.log(`s is "" | s == "": ${s == ""}`)
+
+s = undefined
+console.log(`s is "undefined" | s == null: ${s == null}`)
+console.log(`s is "undefined" | s == undefined: ${s == undefined}`)
+console.log(`s is "undefined" | s == "": ${s == ""}`)
+
+s = null
+console.log(`s is "null" | s == null: ${s == null}`)
+console.log(`s is "null" | s == undefined: ${s == undefined}`)
+console.log(`s is "null" | s == "": ${s == ""}`)
