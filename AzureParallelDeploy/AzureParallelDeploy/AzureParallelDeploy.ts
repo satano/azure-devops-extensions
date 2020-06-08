@@ -49,10 +49,9 @@ export class azureparalleldeploytask {
 			if (toolExecutionError) {
 				tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
 			} else if (deploymentResult === true) {
-				// TODO: localization
-				tl.setResult(tl.TaskResult.Succeeded, "All services were deployed.");
+				tl.setResult(tl.TaskResult.Succeeded, tl.loc("TaskResultSucceeded"));
 			} else {
-				tl.setResult(tl.TaskResult.Failed, "Services were not deployed.");
+				tl.setResult(tl.TaskResult.Failed, tl.loc("TaskResultFailed"));
 			}
 
 			if (this.isLoggedIn) {
@@ -62,9 +61,9 @@ export class azureparalleldeploytask {
 	}
 
 	private static loadSettings(): Settings {
-		const defaultValueUsed = " (parameter not set, using default value)";
-		const defaultWorkingDirectoryUsed = " (parameter not set, using 'System.DefaultWorkingDirectory')";
-		console.log("Initializing settings...")
+		const defaultValueUsed = " " + tl.loc("SettingsUsingDefaultValue");
+		const defaultWorkingDirectoryUsed = " " + tl.loc("SettingsUsingDefaultWorkingDirectory");
+		console.log(tl.loc("InitializingSettings"));
 
 		var additionalInfo: string = "";
 		var appTypeStr = tl.getInput("AppType", false);
@@ -73,10 +72,10 @@ export class azureparalleldeploytask {
 			appType = AppType.WebApp;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppType: ${appType}${additionalInfo}`)
+		console.log(`AppType: "${appType}"${additionalInfo}`)
 
 		var resourceGroup: string = tl.getInput("ResourceGroup", true);
-		console.log(`ResourceGroup: ${resourceGroup}`)
+		console.log(`ResourceGroup: "${resourceGroup}"`)
 
 		additionalInfo = "";
 		var appNameFormat: string = tl.getInput("AppNameFormat", false);
@@ -84,7 +83,7 @@ export class azureparalleldeploytask {
 			appNameFormat = azureparalleldeploytask.DefaultAppNameFormat;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppNameFormat: ${appNameFormat}${additionalInfo}`)
+		console.log(`AppNameFormat: "${appNameFormat}"${additionalInfo}`)
 
 		additionalInfo = "";
 		var appSourceFormat: string = tl.getInput("AppSourceFormat", false);
@@ -92,7 +91,7 @@ export class azureparalleldeploytask {
 			appSourceFormat = azureparalleldeploytask.DefaultAppSourceFormat;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppSourceFormat: ${appSourceFormat}${additionalInfo}`)
+		console.log(`AppSourceFormat: "${appSourceFormat}"${additionalInfo}`)
 
 		additionalInfo = "";
 		var appSourceBasePath: string = tl.getPathInput("AppSourceBasePath", false);

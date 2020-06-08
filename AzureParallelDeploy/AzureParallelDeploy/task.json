@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 10
+		"Patch": 21
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -84,7 +84,7 @@
 		{
 			"name": "AppSourceBasePath",
 			"type": "filePath",
-			"label": "Application source base path",
+			"label": "Applications' sources base path",
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "Base path for services' source files. If not set, agent's default working directory is used (predefined variable `System.DefaultWorkingDirectory`). Services are deployed from ZIP files searched recursively under this directory."
@@ -113,15 +113,23 @@
 		"GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
 		"LoginFailed": "Azure login failed",
 		"MSILoginFailed": "Azure login failed using Managed Service Identity",
+		"ScriptFailed": "Script failed with error: %s",
 		"SettingAzureCloud": "Setting active cloud to: %s",
 		"SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
-
-		"ScriptReturnCode": "Script exited with return code: %d",
-		"ScriptFailed": "Script failed with error: %s",
-		"ScriptFailedWithExitCode": "Script failed with exit code: %d",
-		"JS_InvalidFilePath": "Script file could not be found at specified script location: '%s'. Please verify the script exists at the specified path. If you want to use inline script, specify input `Script Location` as `inlineScript`.",
-		"JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
-		"UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'",
-		"UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM"
+		"DeployingServices": "Deploying services.",
+		"DeployingServicesBaseFolder": "Base folder for services' source files: \"%s\"",
+		"DeployingServiceStart": "Started deploying service \"%s\".",
+		"DeployingServiceFilename": "  Service source filename: \"%s\"",
+		"DeployingServiceAzureName": "  Azure service name: \"%s\"",
+		"DeployingServiceNoSourceFile": "Did not find source file \"%s\" for service \"%s\".",
+		"DeployingServiceMoreSourceFiles": "Found more than one source file \"%s\" for service \"%s\".",
+		"DeployingServiceUsingSourceFile": "Using source file: \"%s\"",
+		"DeployingServiceOk": "Service is deployed.",
+		"DeployingServiceError": "Failed to deploy service.",
+		"InitializingSettings":"Initializing settings...",
+		"SettingsUsingDefaultValue":"(parameter not set, using default value)",
+		"SettingsUsingDefaultWorkingDirectory":"(parameter not set, using 'System.DefaultWorkingDirectory')",
+		"TaskResultFailed":"Services were not deployed.",
+		"TaskResultSucceeded":"All services were deployed."
 	}
 }

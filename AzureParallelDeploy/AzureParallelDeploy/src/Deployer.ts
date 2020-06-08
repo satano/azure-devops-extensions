@@ -16,8 +16,8 @@ export class Deployer {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
 
-		console.log(`Deploying services...`);
-		console.log(`Base folder for services' source files is: "${this.settings.appSourceBasePath}"`);
+		console.log(tl.loc("DeployingServices"));
+		console.log(tl.loc("DeployingServicesBaseFolder", this.settings.appSourceBasePath));
 		console.log("");
 
 		services.forEach(service => {
@@ -25,26 +25,25 @@ export class Deployer {
 			var targetService = Utility.formatString(this.settings.appNameFormat, service);
 			var sourceFileName = Utility.formatString(this.settings.appSourceFormat, service);
 
-			// TODO: localization
 			console.log("");
-			console.log(`Started deploying service "${service}".`)
-			console.log(`  Service source filename: ${sourceFileName}`);
-			console.log(`  Azure service name: ${targetService}`)
+			console.log(tl.loc("DeployingServiceStart", service));
+			console.log(tl.loc("DeployingServiceFilename", sourceFileName));
+			console.log(tl.loc("DeployingServiceAzureName", targetService));
 
 			var sourceFiles = tl.findMatch(this.settings.appSourceBasePath, `**/${sourceFileName}`);
 			if (sourceFiles.length == 0) {
 				result = false;
-				Utility.logError(`Did not find source file "${sourceFileName}" for service "${service}".`);
+				Utility.logError(tl.loc("DeployingServiceNoSourceFile", sourceFileName, service));
 				return;
 			} else if (sourceFiles.length > 1) {
 				result = false;
-				Utility.logError(`Found more than one source file "${sourceFileName}" for service "${service}".`);
+				Utility.logError(tl.loc("DeployingServiceMoreSourceFiles", sourceFileName, service));
 				for (const file of sourceFiles) {
 					console.error(`  - ${file}`);
 				}
 				return;
 			}
-			console.log(`Using source file: ${sourceFiles[0]}`);
+			console.log(tl.loc("DeployingServiceUsingSourceFile", sourceFiles[0]));
 
 			var command = this.settings.appType == AppType.FunctionApp ? "functionapp" : "webapp";
 			var slotNameParam = Utility.isNullOrWhitespace(this.settings.slotName)
@@ -57,14 +56,14 @@ export class Deployer {
 			let deployment = tl.exec("az", azArgs)
 				.then(
 					result => {
-						console.log(`${service}: Service is deployed.`)
+						console.log(`${service}: ${tl.loc("DeployingServiceOk")}`)
 					},
 					error => {
 						result = false;
 						if (this.debug) {
 							Utility.logError(error);
 						}
-						tl.error(`${service}: Failed to deploy service.`);
+						tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
 					}
 				);
 			deployments.push(deployment);
