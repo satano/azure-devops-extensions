@@ -23,15 +23,14 @@ export class azureparalleldeploytask {
 
 			var debug: boolean = !!tl.getTaskVariable("System.Debug");
 			var settings = this.loadSettings();
-			var servicesRaw: string = tl.getInput("Services", true);
-			var services: string[] = tl.getDelimitedInput("Services", "\n");
-			console.log(`Services: "${servicesRaw}"`)
+			var services: string = tl.getInput("Services", true);
+			console.log(`Services: "${services}"`)
 			console.log("");
 
 			const deployTimeLog: string = "All services deployed in";
 			console.time(deployTimeLog);
 			var deployer = new Deployer(settings, debug);
-			deploymentResult = await deployer.deployWebApps(services);
+			deploymentResult = await deployer.deployWebApps(services.split(","));
 			console.timeEnd(deployTimeLog);
 		}
 		catch (err) {
@@ -62,50 +61,57 @@ export class azureparalleldeploytask {
 
 	private static loadSettings(): Settings {
 		const defaultValueUsed = " " + tl.loc("SettingsUsingDefaultValue");
-		const defaultWorkingDirectoryUsed = " " + tl.loc("SettingsUsingDefaultWorkingDirectory");
 		console.log(tl.loc("InitializingSettings"));
 
 		var additionalInfo: string = "";
-		var appTypeStr = tl.getInput("AppType", false);
+		var appTypeStr = tl.getInput("AppType");
 		var appType: AppType = AppType[appTypeStr];
 		if (appType == undefined) {
 			appType = AppType.WebApp;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppType: "${appType}"${additionalInfo}`)
+		console.log(`AppType: "${appType}"${additionalInfo}`);
 
 		var resourceGroup: string = tl.getInput("ResourceGroup", true);
-		console.log(`ResourceGroup: "${resourceGroup}"`)
+		console.log(`ResourceGroup: "${resourceGroup}"`);
 
 		additionalInfo = "";
-		var appNameFormat: string = tl.getInput("AppNameFormat", false);
+		var appNameFormat: string = tl.getInput("AppNameFormat");
 		if (Utility.isNullOrWhitespace(appNameFormat)) {
 			appNameFormat = azureparalleldeploytask.DefaultAppNameFormat;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppNameFormat: "${appNameFormat}"${additionalInfo}`)
+		console.log(`AppNameFormat: "${appNameFormat}"${additionalInfo}`);
 
 		additionalInfo = "";
-		var appSourceFormat: string = tl.getInput("AppSourceFormat", false);
+		var appSourceFormat: string = tl.getInput("AppSourceFormat");
 		if (Utility.isNullOrWhitespace(appSourceFormat)) {
 			appSourceFormat = azureparalleldeploytask.DefaultAppSourceFormat;
 			additionalInfo = defaultValueUsed;
 		}
-		console.log(`AppSourceFormat: "${appSourceFormat}"${additionalInfo}`)
+		console.log(`AppSourceFormat: "${appSourceFormat}"${additionalInfo}`);
 
 		additionalInfo = "";
-		var appSourceBasePath: string = tl.getPathInput("AppSourceBasePath", false);
-		if (Utility.isNullOrWhitespace(appSourceBasePath)) {
-			appSourceBasePath = tl.getVariable("System.DefaultWorkingDirectory");
-			additionalInfo = defaultWorkingDirectoryUsed;
+		var appSourceBasePath: string = "";
+		if (tl.filePathSupplied("AppSourceBasePath")) {
+			appSourceBasePath = tl.getPathInput("AppSourceBasePath");
+		} else {
+			var hostType = tl.getVariable("System.HostType");
+			if (hostType == "build") {
+				appSourceBasePath = tl.getVariable("Build.StagingDirectory");
+				additionalInfo = " " + tl.loc("SettingsUsingStagingDirectory", hostType);
+			} else {
+				appSourceBasePath = tl.getVariable("System.DefaultWorkingDirectory");
+				additionalInfo = " " + tl.loc("SettingsUsingDefaultWorkingDirectory", hostType);
+			}
 		}
-		console.log(`AppSourceBasePath: "${appSourceBasePath}"${additionalInfo}`)
+		console.log(`AppSourceBasePath: "${appSourceBasePath}"${additionalInfo}`);
 
-		var slotName: string = tl.getInput("SlotName", false);
+		var slotName: string = tl.getInput("SlotName");
 		if (slotName == null) {
 			slotName = "";
 		}
-		console.log(`SlotName: ${slotName}`)
+		console.log(`SlotName: ${slotName}`);
 
 		return {
 			appType: appType,

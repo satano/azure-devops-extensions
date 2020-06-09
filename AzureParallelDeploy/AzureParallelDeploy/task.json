@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 22
+		"Patch": 33
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -126,10 +126,11 @@
 		"DeployingServiceUsingSourceFile": "Using source file: \"%s\"",
 		"DeployingServiceOk": "Service is deployed.",
 		"DeployingServiceError": "Failed to deploy service.",
-		"InitializingSettings":"Initializing settings...",
-		"SettingsUsingDefaultValue":"(parameter not set, using default value)",
-		"SettingsUsingDefaultWorkingDirectory":"(parameter not set, using 'System.DefaultWorkingDirectory')",
-		"TaskResultFailed":"Services were not deployed.",
-		"TaskResultSucceeded":"All services were deployed."
+		"InitializingSettings": "Initializing settings...",
+		"SettingsUsingDefaultValue": "(parameter not set, using default value)",
+		"SettingsUsingStagingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'Build.StagingDirectory')",
+		"SettingsUsingDefaultWorkingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'System.DefaultWorkingDirectory')",
+		"TaskResultFailed": "Services were not deployed.",
+		"TaskResultSucceeded": "All services were deployed."
 	}
 }

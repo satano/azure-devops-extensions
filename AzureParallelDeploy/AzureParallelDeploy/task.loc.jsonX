@@ -128,6 +128,7 @@
 		"DeployingServiceError": "ms-resource:loc.messages.DeployingServiceError",
 		"InitializingSettings": "ms-resource:loc.messages.InitializingSettings",
 		"SettingsUsingDefaultValue": "ms-resource:loc.messages.SettingsUsingDefaultValue",
+		"SettingsUsingStagingDirectory": "ms-resource:loc.messages.SettingsUsingStagingDirectory",
 		"SettingsUsingDefaultWorkingDirectory": "ms-resource:loc.messages.SettingsUsingDefaultWorkingDirectory",
 		"TaskResultFailed": "ms-resource:loc.messages.TaskResultFailed",
 		"TaskResultSucceeded": "ms-resource:loc.messages.TaskResultSucceeded"

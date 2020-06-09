@@ -22,6 +22,9 @@ export class Deployer {
 
 		services.forEach(service => {
 			service = service.trim();
+			if (service == "") {
+				return;
+			}
 			var targetService = Utility.formatString(this.settings.appNameFormat, service);
 			var sourceFileName = Utility.formatString(this.settings.appSourceFormat, service);
 

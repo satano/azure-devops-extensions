@@ -2,7 +2,7 @@
 	"manifestVersion": 1,
 	"id": "azure-parallel-deploy",
 	"name": "Azure Parallel Deploy",
-	"version": "1.0.22",
+	"version": "1.0.33",
 	"publisher": "stano-petko",
 	"branding": {
 		"theme": "light"
