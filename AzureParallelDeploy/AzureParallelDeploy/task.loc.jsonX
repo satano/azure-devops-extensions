@@ -1,0 +1,136 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+	"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
+	"name": "AzureParallelDeploy",
+	"friendlyName": "ms-resource:loc.friendlyName",
+	"description": "ms-resource:loc.description",
+	"helpMarkDown": "ms-resource:loc.helpMarkDown",
+	"category": "Deploy",
+	"visibility": [
+		"Build",
+		"Release"
+	],
+	"author": "Stano Peťko",
+	"version": {
+		"Major": 1,
+		"Minor": 0,
+		"Patch": 35
+	},
+	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+	"execution": {
+		"Node": {
+			"target": "AzureParallelDeploy.js"
+		}
+	},
+	"inputs": [
+		{
+			"name": "ConnectedServiceName",
+			"type": "connectedService:AzureRM",
+			"label": "ms-resource:loc.input.label.ConnectedServiceName",
+			"defaultValue": "",
+			"required": true,
+			"helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+			"properties": {
+				"EndpointFilterRule": "ScopeLevel != ManagementGroup"
+			}
+		},
+		{
+			"name": "ResourceGroup",
+			"type": "pickList",
+			"label": "ms-resource:loc.input.label.ResourceGroup",
+			"defaultValue": "",
+			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
+			"helpMarkDown": "ms-resource:loc.input.help.ResourceGroup"
+		},
+		{
+			"name": "AppType",
+			"type": "radio",
+			"label": "ms-resource:loc.input.label.AppType",
+			"options": {
+				"WebApp": "Web App",
+				"FunctionApp": "Function App"
+			},
+			"defaultValue": "WebApp",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.AppType"
+		},
+		{
+			"name": "Services",
+			"type": "multiLine",
+			"label": "ms-resource:loc.input.label.Services",
+			"defaultValue": "",
+			"required": true,
+			"helpMarkDown": "ms-resource:loc.input.help.Services"
+		},
+		{
+			"name": "AppNameFormat",
+			"type": "string",
+			"label": "ms-resource:loc.input.label.AppNameFormat",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.AppNameFormat"
+		},
+		{
+			"name": "AppSourceFormat",
+			"type": "string",
+			"label": "ms-resource:loc.input.label.AppSourceFormat",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.AppSourceFormat"
+		},
+		{
+			"name": "AppSourceBasePath",
+			"type": "filePath",
+			"label": "ms-resource:loc.input.label.AppSourceBasePath",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.AppSourceBasePath"
+		},
+		{
+			"name": "SlotName",
+			"type": "string",
+			"label": "ms-resource:loc.input.label.SlotName",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.SlotName"
+		}
+	],
+	"dataSourceBindings": [
+		{
+			"target": "ResourceGroup",
+			"endpointId": "$(ConnectedServiceName)",
+			"dataSourceName": "AzureRMWebAppResourceGroup"
+		}
+	],
+	"messages": {
+		"AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+		"AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
+		"ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+		"FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
+		"GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning",
+		"LoginFailed": "ms-resource:loc.messages.LoginFailed",
+		"MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
+		"ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+		"SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
+		"SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+		"DeployingServices": "ms-resource:loc.messages.DeployingServices",
+		"DeployingServicesBaseFolder": "ms-resource:loc.messages.DeployingServicesBaseFolder",
+		"DeployingServiceStart": "ms-resource:loc.messages.DeployingServiceStart",
+		"DeployingServiceFilename": "ms-resource:loc.messages.DeployingServiceFilename",
+		"DeployingServiceAzureName": "ms-resource:loc.messages.DeployingServiceAzureName",
+		"DeployingServiceNoSourceFile": "ms-resource:loc.messages.DeployingServiceNoSourceFile",
+		"DeployingServiceMoreSourceFiles": "ms-resource:loc.messages.DeployingServiceMoreSourceFiles",
+		"DeployingServiceUsingSourceFile": "ms-resource:loc.messages.DeployingServiceUsingSourceFile",
+		"DeployingServiceOk": "ms-resource:loc.messages.DeployingServiceOk",
+		"DeployingServiceError": "ms-resource:loc.messages.DeployingServiceError",
+		"InitializingSettings": "ms-resource:loc.messages.InitializingSettings",
+		"SettingsUsingDefaultValue": "ms-resource:loc.messages.SettingsUsingDefaultValue",
+		"SettingsUsingStagingDirectory": "ms-resource:loc.messages.SettingsUsingStagingDirectory",
+		"SettingsUsingDefaultWorkingDirectory": "ms-resource:loc.messages.SettingsUsingDefaultWorkingDirectory",
+		"TaskResultFailed": "ms-resource:loc.messages.TaskResultFailed",
+		"TaskResultSucceeded": "ms-resource:loc.messages.TaskResultSucceeded"
+	}
+}

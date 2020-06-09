@@ -1,0 +1,76 @@
+{
+	"manifestVersion": 1,
+	"id": "azure-parallel-deploy",
+	"name": "Azure Parallel Deploy",
+	"version": "1.0.35",
+	"publisher": "stano-petko",
+	"branding": {
+		"theme": "light"
+	},
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"description": "Minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
+	"public": false,
+	"categories": [
+		"Azure Pipelines"
+	],
+	"icons": {
+		"default": "extension-icon.png"
+	},
+	"tags": [
+		"build",
+		"deploy",
+		"release",
+		"ci",
+		"continuous integration",
+		"web service",
+		"web app",
+		"function app"
+	],
+	"content": {
+		"details": {
+			"path": "README.md"
+		},
+		"license": {
+			"path": "LICENSE"
+		}
+	},
+	"links": {
+		"home": {
+			"uri": "https://stanopetko.eu"
+		},
+		"repository": {
+			"uri": "https://github.com/satano/azure-devops-extensions"
+		},
+		"issues": {
+			"uri": "https://github.com/satano/azure-devops-extensions/issues"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"uri": "https://github.com/satano/azure-devops-extensions/"
+	},
+	"files": [
+		{
+			"path": "AzureParallelDeploy"
+		}
+	],
+	"scopes": [
+		"vso.build"
+	],
+	"contributions": [
+		{
+			"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "AzureParallelDeploy"
+			}
+		}
+	]
+}
