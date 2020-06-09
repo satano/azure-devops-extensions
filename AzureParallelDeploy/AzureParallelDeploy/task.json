@@ -3,8 +3,8 @@
 	"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
 	"name": "AzureParallelDeploy",
 	"friendlyName": "Azure Parallel Deploy",
-	"description": "Minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
-	"helpMarkDown": "",
+	"description": "Simplify your pipeline and minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
+	"helpMarkDown": "[More information](https://github.com/satano/azure-devops-extensions/tree/master/AzureParallelDeploy#azure-parallel-deploy-task)",
 	"category": "Deploy",
 	"visibility": [
 		"Build",
@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 33
+		"Patch": 35
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -29,7 +29,7 @@
 			"label": "Azure subscription",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Select an Azure resource manager subscription for the deployment.",
+			"helpMarkDown": "Azure resource manager subscription for the deployment.",
 			"properties": {
 				"EndpointFilterRule": "ScopeLevel != ManagementGroup"
 			}
@@ -55,7 +55,7 @@
 			},
 			"defaultValue": "WebApp",
 			"required": false,
-			"helpMarkDown": "Type of applications to deploy. All deployed applications must be of the same type. If the value is not set, Web application ('WebApp') is used."
+			"helpMarkDown": "Type of deployed applications. All deployed applications must be of the same type. The value is either `WebApp` or `FunctionApp`. If the value is not set or is invalid, `WebApp` is used."
 		},
 		{
 			"name": "Services",
@@ -63,7 +63,7 @@
 			"label": "Services",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Logical names of the services to deploy, one name per line."
+			"helpMarkDown": "Comma separated values of logical service names. These names are used for generating real service names in Azure Portal and names of source ZIP files."
 		},
 		{
 			"name": "AppNameFormat",
@@ -71,7 +71,7 @@
 			"label": "Azure application name format string",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Format string for app service name in Azure Portal. Format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if format string is `prod-{0}-api` and logical service name is `forecast`, the application will be deployed to `prod-forecast-api` app service. If the value is not set, \"{0}\" format string will be used."
+			"helpMarkDown": "Format string for app service name in Azure Portal. Format string accepts one parameter `{0}`, which will be replaced by the logical name of the service. For example if format string is `prod-{0}-api` and logical service name is `forecast`, the application will be deployed to `prod-forecast-api` app service. If the value is not set, `{0}` format string will be used (the name of the service in Azure Portal is the same as logical service name)."
 		},
 		{
 			"name": "AppSourceFormat",
@@ -79,7 +79,7 @@
 			"label": "Application source file format string",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Format string for path to source ZIP files for services. Every service is deployed from ZIP file. The format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if this format string is `{0}-api.zip` and logical service name is `forecast`, source file path will be `forecast-api.zip`. \"zip\" extension must be specified expplicitly. If the value is not set, \"{0}.zip\" format string will be used."
+			"helpMarkDown": "Format string for path to source ZIP files for services. Every service is deployed from single ZIP file. The format string accepts one parameter `{0}`, which will be replace by the logical name of the service. For example if format string is `{0}-api.zip` and logical service name is `forecast`, source file name will be `forecast-api.zip`. `zip` extension must be specified expplicitly. If the value is not set, `{0}.zip` format string will be used (source file name is the same as logical service name with `zip` extension)."
 		},
 		{
 			"name": "AppSourceBasePath",
@@ -87,7 +87,7 @@
 			"label": "Applications' sources base path",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Base path for services' source files. If not set, agent's default working directory is used (predefined variable `System.DefaultWorkingDirectory`). Services are deployed from ZIP files searched recursively under this directory."
+			"helpMarkDown": "Base path for services' source files. Service source zip file is searched recursively in this folder. If the value is not set, the default value is used based on the build type. If it is general build, `Build.StagingDirectory` value is used. If it is any other build type (release, deployment...) `System.DefaultWorkingDirectory` is used. Build type is determined by the `System.HostType` variable."
 		},
 		{
 			"name": "SlotName",

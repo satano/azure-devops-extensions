@@ -137,6 +137,6 @@ Base path for services' source files. Service source zip file is searched recurs
 The name of the slot for deployment. The same slot name is used for all deployed services.
 
 [AppServiceDeployTask]: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment
-[ImgSettings]: https://raw.githubusercontent.com/satano/azure-devops-extensions/DeployAsync/AzureParallelDeploy/images/azure-parallel-deploy.png
+[ImgSettings]: https://raw.githubusercontent.com/satano/azure-devops-extensions/master/AzureParallelDeploy/images/azure-parallel-deploy.png
 [PipelineJoin]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops#join
 [PipelineParameters]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/runtime-parameters

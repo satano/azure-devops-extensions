@@ -2,7 +2,7 @@
 	"manifestVersion": 1,
 	"id": "azure-parallel-deploy",
 	"name": "Azure Parallel Deploy",
-	"version": "1.0.33",
+	"version": "1.0.35",
 	"publisher": "stano-petko",
 	"branding": {
 		"theme": "light"
@@ -22,10 +22,13 @@
 	},
 	"tags": [
 		"build",
-		"ci",
+		"deploy",
 		"release",
+		"ci",
 		"continuous integration",
-		"web service"
+		"web service",
+		"web app",
+		"function app"
 	],
 	"content": {
 		"details": {
@@ -33,6 +36,17 @@
 		},
 		"license": {
 			"path": "LICENSE"
+		}
+	},
+	"links": {
+		"home": {
+			"uri": "https://stanopetko.eu"
+		},
+		"repository": {
+			"uri": "https://github.com/satano/azure-devops-extensions"
+		},
+		"issues": {
+			"uri": "https://github.com/satano/azure-devops-extensions/issues"
 		}
 	},
 	"repository": {
