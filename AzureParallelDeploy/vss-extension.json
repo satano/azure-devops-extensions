@@ -2,7 +2,7 @@
 	"manifestVersion": 1,
 	"id": "azure-parallel-deploy",
 	"name": "Azure Parallel Deploy",
-	"version": "1.0.35",
+	"version": "1.0.36",
 	"publisher": "stano-petko",
 	"branding": {
 		"theme": "light"
@@ -13,7 +13,7 @@
 		}
 	],
 	"description": "Minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
-	"public": false,
+	"public": true,
 	"categories": [
 		"Azure Pipelines"
 	],
