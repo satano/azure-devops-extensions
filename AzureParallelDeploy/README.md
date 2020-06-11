@@ -66,7 +66,7 @@ steps:
     AppNameFormat: 'sp-servicedeployment-{0}'
 ```
 
-This YAML syntax is for simple use, where `Services` input is set directly in the task. But you may want to use service names as list and not as simple string. For example when the service names are set using [runtime parameter][PipelineParameters]. It is convenient to have this parameter as YAML list (parameter of type `object`), because than it can be used in several ways, for example you can enumerate the list's values in the pipeline. But such a value cannot be directly used as input into the task, it have to be converted to string. To do that, just use [join expression][PipelineJoin] and make a desired string variable.
+This YAML syntax is for simple use, where `Services` input is set directly in the task. But you may want to use service names as list and not as simple string. For example when the service names are set using [runtime parameter][PipelineParameters]. It is convenient to have this parameter as YAML list (parameter of type `object`), because than it can be used in several ways, for example you can enumerate the list's values in the pipeline. But such a value cannot be directly used as input into the task, it have to be converted to string. To do that, just use [join expression][PipelineJoin] and make a desired string value.
 
 ``` yml
 parameters:
@@ -78,17 +78,13 @@ parameters:
     - api2
     - api3
 
-variables:
-  # Convert list to string with comma delimited values.
-  services: ${{ join(',', parameters.services) }}
-
 steps:
 - task: AzureParallelDeploy@1
   displayName: 'Deploy services'
   inputs:
     ConnectedServiceName: 'Gabo-KROS'
     ResourceGroup: 'ServiceDeployment'
-    Services: $(services) # Use string variable.
+    Services:  ${{ join(',', parameters.services) }} # Convert list to string with comma delimited values.
 ```
 
 The default value of the runtime parameter can also be written on one line:
