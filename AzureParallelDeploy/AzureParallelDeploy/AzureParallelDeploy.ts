@@ -19,10 +19,10 @@ export class azureparalleldeploytask {
 			this.setConfigDirectory();
 			this.setAzureCloudBasedOnServiceEndpoint();
 			var connectedService: string = tl.getInput("ConnectedServiceName", true);
-			this.loginAzureRM(connectedService);
+			var subscriptionId: string = this.loginAzureRM(connectedService);
 
 			var debug: boolean = !!tl.getTaskVariable("System.Debug");
-			var settings = this.loadSettings();
+			var settings = this.loadSettings(subscriptionId);
 			var services: string = tl.getInput("Services", true);
 			console.log(`Services: "${services}"`)
 			console.log("");
@@ -59,7 +59,7 @@ export class azureparalleldeploytask {
 		}
 	}
 
-	private static loadSettings(): Settings {
+	private static loadSettings(subscriptionId: string): Settings {
 		const defaultValueUsed = " " + tl.loc("SettingsUsingDefaultValue");
 		console.log(tl.loc("InitializingSettings"));
 
@@ -112,6 +112,7 @@ export class azureparalleldeploytask {
 			slotName = "";
 		}
 		console.log(`SlotName: ${slotName}`);
+		console.log(`SubscriptionId: ${subscriptionId}`);
 
 		return {
 			appType: appType,
@@ -119,14 +120,15 @@ export class azureparalleldeploytask {
 			appSourceBasePath: appSourceBasePath,
 			appNameFormat: appNameFormat,
 			appSourceFormat: appSourceFormat,
-			slotName: slotName
+			slotName: slotName,
+			subscriptionId: subscriptionId
 		};
 	}
 
 	private static isLoggedIn: boolean = false;
 	private static cliPasswordPath: string = null;
 
-	private static loginAzureRM(connectedService: string): void {
+	private static loginAzureRM(connectedService: string): string {
 		var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
 		var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
@@ -164,6 +166,7 @@ export class azureparalleldeploytask {
 		this.isLoggedIn = true;
 		// Set the subscription imported to the current subscription.
 		Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+		return subscriptionID;
 	}
 
 	private static setConfigDirectory(): void {
