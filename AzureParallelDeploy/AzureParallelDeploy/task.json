@@ -131,6 +131,10 @@
 		"SettingsUsingDefaultValue": "(parameter not set, using default value)",
 		"SettingsUsingStagingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'Build.StagingDirectory')",
 		"SettingsUsingDefaultWorkingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'System.DefaultWorkingDirectory')",
+		"SyncFunctionTriggersInvoking": "Invoking 'SyncFunctionTriggers' action.",
+		"SyncFunctionTriggersNotInvoking": "'SyncFunctionTriggers' action will not be invoked, because not all services were deployed.",
+		"SyncFunctionTriggersFailed": "Sync function triggers action failed.",
+		"SyncFunctionTriggersSucceeded": "Sync function triggers action invoked successfully.",
 		"TaskResultFailed": "Services were not deployed.",
 		"TaskResultSucceeded": "All services were deployed."
 	}

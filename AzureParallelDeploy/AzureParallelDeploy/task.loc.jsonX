@@ -131,6 +131,10 @@
 		"SettingsUsingDefaultValue": "ms-resource:loc.messages.SettingsUsingDefaultValue",
 		"SettingsUsingStagingDirectory": "ms-resource:loc.messages.SettingsUsingStagingDirectory",
 		"SettingsUsingDefaultWorkingDirectory": "ms-resource:loc.messages.SettingsUsingDefaultWorkingDirectory",
+		"SyncFunctionTriggersInvoking": "ms-resource:loc.messages.SyncFunctionTriggersInvoking",
+		"SyncFunctionTriggersNotInvoking": "ms-resource:loc.messages.SyncFunctionTriggersNotInvoking",
+		"SyncFunctionTriggersFailed": "ms-resource:loc.messages.SyncFunctionTriggersFailed",
+		"SyncFunctionTriggersSucceeded": "ms-resource:loc.messages.SyncFunctionTriggersSucceeded",
 		"TaskResultFailed": "ms-resource:loc.messages.TaskResultFailed",
 		"TaskResultSucceeded": "ms-resource:loc.messages.TaskResultSucceeded"
 	}

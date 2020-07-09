@@ -74,10 +74,10 @@ export class Deployer {
 		await Promise.all(deployments);
 		if (this.settings.appType == AppType.FunctionApp) {
 			if (deploymentResult) {
-				console.log("Invoking 'SyncFunctionTriggers' action.")
+				console.log(tl.loc("SyncFunctionTriggersInvoking"))
 				deploymentResult = this.syncFunctionTriggers(deployedServices);
 			} else {
-				console.log("'SyncFunctionTriggers' action will not be invoked, because not all services were deployed.")
+				console.log(tl.loc("SyncFunctionTriggersNotInvoking"))
 			}
 		}
 
@@ -95,7 +95,7 @@ export class Deployer {
 
 		var result = tl.execSync("az", azArgs);
 		if (result.code != 0) {
-			tl.error("Sync function triggers action failed.");
+			tl.error(tl.loc("SyncFunctionTriggersFailed"));
 			tl.error(`Error Code: [${result.code}]`);
 			if (result.error?.message != null) {
 				tl.error(result.error.message);
@@ -104,7 +104,7 @@ export class Deployer {
 			return false;
 		}
 
-		console.log("Sync function triggers action invoked successfully.");
+		console.log(tl.loc("SyncFunctionTriggersSucceeded"));
 		return true;
 	}
 

@@ -43,6 +43,10 @@
 	"loc.messages.SettingsUsingDefaultValue": "(parameter not set, using default value)",
 	"loc.messages.SettingsUsingStagingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'Build.StagingDirectory')",
 	"loc.messages.SettingsUsingDefaultWorkingDirectory": "(parameter not set, 'System.HostType' is '%s' so using 'System.DefaultWorkingDirectory')",
+	"loc.messages.SyncFunctionTriggersInvoking": "Invoking 'SyncFunctionTriggers' action.",
+	"loc.messages.SyncFunctionTriggersNotInvoking": "'SyncFunctionTriggers' action will not be invoked, because not all services were deployed.",
+	"loc.messages.SyncFunctionTriggersFailed": "Sync function triggers action failed.",
+	"loc.messages.SyncFunctionTriggersSucceeded": "Sync function triggers action invoked successfully.",
 	"loc.messages.TaskResultFailed": "Services were not deployed.",
 	"loc.messages.TaskResultSucceeded": "All services were deployed."
 }
