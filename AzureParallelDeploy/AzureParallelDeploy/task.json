@@ -13,8 +13,8 @@
 	"author": "Stano Peťko",
 	"version": {
 		"Major": 1,
-		"Minor": 0,
-		"Patch": 60
+		"Minor": 1,
+		"Patch": 0
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
