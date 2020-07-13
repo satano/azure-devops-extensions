@@ -112,6 +112,10 @@ export class azureparalleldeploytask {
 			slotName = "";
 		}
 		console.log(`SlotName: ${slotName}`);
+
+		var syncFunctionTriggers: boolean = tl.getBoolInput("SyncFunctionTriggers", false);
+		console.log(`SyncFunctionTriggers: ${syncFunctionTriggers}`);
+
 		console.log(`SubscriptionId: ${subscriptionId}`);
 
 		return {
@@ -121,7 +125,8 @@ export class azureparalleldeploytask {
 			appNameFormat: appNameFormat,
 			appSourceFormat: appSourceFormat,
 			slotName: slotName,
-			subscriptionId: subscriptionId
+			subscriptionId: subscriptionId,
+			syncFunctionTriggers: syncFunctionTriggers
 		};
 	}
 

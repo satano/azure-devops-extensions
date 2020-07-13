@@ -73,7 +73,7 @@ export class Deployer {
 		});
 		await Promise.all(deployments);
 		if (this.settings.appType == AppType.FunctionApp) {
-			if (deploymentResult) {
+			if (deploymentResult && this.settings.syncFunctionTriggers) {
 				console.log(tl.loc("SyncFunctionTriggersInvoking"))
 				deploymentResult = this.syncFunctionTriggers(deployedServices);
 			} else {

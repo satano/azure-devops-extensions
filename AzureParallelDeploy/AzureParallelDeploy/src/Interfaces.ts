@@ -11,4 +11,5 @@ export interface Settings {
 	appSourceBasePath: string;
 	slotName: string;
 	subscriptionId: string;
+	syncFunctionTriggers: boolean;
 }

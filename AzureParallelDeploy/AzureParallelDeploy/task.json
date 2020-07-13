@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 1,
-		"Patch": 0
+		"Patch": 1
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
@@ -96,6 +96,14 @@
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "The name of the slot for deployment. The slot name is used for all deployed services."
+		},
+		{
+			"name": "SyncFunctionTriggers",
+			"type": "boolean",
+			"label": "Sync function triggers",
+			"defaultValue": false,
+			"required": false,
+			"helpMarkDown": "Run [SyncFunctionTriggers](https://docs.microsoft.com/en-us/rest/api/appservice/webapps/syncfunctiontriggers) action after deploying Azure functions."
 		}
 	],
 	"dataSourceBindings": [
