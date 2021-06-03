@@ -12,6 +12,9 @@ export class Deployer {
 	public readonly settings: Settings;
 	public readonly debug: boolean;
 
+	private readonly retryCount: { [service: string] : number; };
+	private static readonly maxRetries = 3;
+
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
@@ -56,22 +59,39 @@ export class Deployer {
 				` --resource-group ${this.settings.resourceGroup}` +
 				` --name ${targetService}${slotNameParam}` +
 				` --src "${sourceFiles[0]}"`;
-			let deployment = tl.exec("az", azArgs)
-				.then(
-					result => {
-						console.log(`${service}: ${tl.loc("DeployingServiceOk")}`)
-					},
-					error => {
-						result = false;
-						if (this.debug) {
-							Utility.logError(error);
-						}
-						tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
-					}
-				);
+
+			this.retryCount[service] = 0;
+
+			let deployment = this.ExecuteDeployment(azArgs, service, result);
 			deployments.push(deployment);
 		});
 		await Promise.all(deployments);
 		return result;
+	}
+
+	public ExecuteDeployment(azArgs: string, service: string, result: boolean): any
+	{
+		return tl.exec("az", azArgs)
+		.then(
+			result => {
+				console.log(`${service}: ${tl.loc("DeployingServiceOk")}`)
+			},
+			error => {
+				let retryCount = this.retryCount[service];
+				if (this.retryCount[service] < Deployer.maxRetries)
+				{
+					this.retryCount[service]++;
+					console.log(`${service}: ${tl.loc("DeployServiceRetry", retryCount)}`)
+					this.ExecuteDeployment(azArgs, service, result);
+				} else {
+					result = false;
+					if (this.debug) {
+						Utility.logError(error);
+					}
+					tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
+				}
+				
+			}
+		);
 	}
 }
