@@ -12,7 +12,7 @@ export class Deployer {
 	public readonly settings: Settings;
 	public readonly debug: boolean;
 
-	private readonly retryCount: { [service: string] : number; };
+	private readonly retryCount: Map<string, number> = new Map<string, number>();
 	private static readonly maxRetries = 3;
 
 	public async deployWebApps(services: string[]): Promise<boolean> {
