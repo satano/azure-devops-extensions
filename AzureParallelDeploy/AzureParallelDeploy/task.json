@@ -117,6 +117,7 @@
 		"ScriptFailed": "Script failed with error: %s",
 		"SettingAzureCloud": "Setting active cloud to: %s",
 		"SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
+		"DeployServiceRetry": "Service not deployed, retrying (%s).",
 		"DeployingServices": "Deploying services.",
 		"DeployingServicesBaseFolder": "Base folder for services' source files: \"%s\"",
 		"DeployingServiceStart": "Started deploying service \"%s\".",

@@ -117,6 +117,7 @@
 		"ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
 		"SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
 		"SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+		"DeployServiceRetry": "ms-resource:loc.messages.DeployServiceRetry",
 		"DeployingServices": "ms-resource:loc.messages.DeployingServices",
 		"DeployingServicesBaseFolder": "ms-resource:loc.messages.DeployingServicesBaseFolder",
 		"DeployingServiceStart": "ms-resource:loc.messages.DeployingServiceStart",

@@ -1,9 +1,8 @@
 import tl = require("azure-pipelines-task-lib/task");
-import { AppType, Settings } from './Interfaces'
+import { AppType, Settings } from "./Interfaces";
 import { Utility } from "./Utility";
 
 export class Deployer {
-
 	public constructor(settings: Settings, debug: boolean) {
 		this.settings = settings;
 		this.debug = debug;
@@ -11,6 +10,9 @@ export class Deployer {
 
 	public readonly settings: Settings;
 	public readonly debug: boolean;
+
+	private readonly retryCount: Map<string, number> = new Map<string, number>();
+	private static readonly maxRetries = 3;
 
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
@@ -56,22 +58,36 @@ export class Deployer {
 				` --resource-group ${this.settings.resourceGroup}` +
 				` --name ${targetService}${slotNameParam}` +
 				` --src "${sourceFiles[0]}"`;
-			let deployment = tl.exec("az", azArgs)
-				.then(
-					result => {
-						console.log(`${service}: ${tl.loc("DeployingServiceOk")}`)
-					},
-					error => {
-						result = false;
-						if (this.debug) {
-							Utility.logError(error);
-						}
-						tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
-					}
-				);
+
+			this.retryCount[service] = 0;
+
+			let deployment = this.ExecuteDeployment(azArgs, service, result);
 			deployments.push(deployment);
 		});
 		await Promise.all(deployments);
 		return result;
+	}
+
+	private ExecuteDeployment(azArgs: string, service: string, result: boolean): any {
+		return tl.exec("az", azArgs).then(
+			_ => {
+				console.log(`${service}: ${tl.loc("DeployingServiceOk")}`);
+			},
+			error => {
+				this.retryCount[service]++;
+				let retryCount = this.retryCount[service];
+				if (retryCount <= Deployer.maxRetries) {
+					console.log(`${service}: ${tl.loc("DeployServiceRetry", retryCount)}`);
+					this.ExecuteDeployment(azArgs, service, result);
+				} else {
+					result = false;
+					tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
+				}
+
+				if (this.debug) {
+					Utility.logError(error);
+				}
+			}
+		);
 	}
 }
