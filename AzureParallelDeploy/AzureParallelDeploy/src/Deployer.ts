@@ -14,6 +14,8 @@ export class Deployer {
 	private readonly retryCount: Map<string, number> = new Map<string, number>();
 	private static readonly maxRetries = 3;
 
+	private static readonly  retryDelayInMilliseconds = 3000;
+
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
 		var deployments: Q.Promise<void>[] = [];
@@ -69,13 +71,17 @@ export class Deployer {
 	}
 
 	private ExecuteDeployment(azArgs: string, service: string, result: boolean): any {
+		let retryCount = this.retryCount[service];
+		if (retryCount > 0) {
+			this.delay( retryCount * Deployer.retryDelayInMilliseconds)
+		}
+
 		return tl.exec("az", azArgs).then(
 			_ => {
 				console.log(`${service}: ${tl.loc("DeployingServiceOk")}`);
 			},
 			error => {
 				this.retryCount[service]++;
-				let retryCount = this.retryCount[service];
 				if (retryCount <= Deployer.maxRetries) {
 					console.log(`${service}: ${tl.loc("DeployServiceRetry", retryCount)}`);
 					this.ExecuteDeployment(azArgs, service, result);
@@ -89,5 +95,10 @@ export class Deployer {
 				}
 			}
 		);
+	}
+
+	private delay(ms: number)
+	{
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 }
