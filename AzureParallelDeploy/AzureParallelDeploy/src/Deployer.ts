@@ -1,4 +1,5 @@
 import tl = require("azure-pipelines-task-lib/task");
+import Q = require("q");
 import { AppType, Settings } from "./Interfaces";
 import { Utility } from "./Utility";
 
@@ -18,7 +19,7 @@ export class Deployer {
 
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
-		var deployments: Q.Promise<void>[] = [];
+		var deployments: Promise<any>[] = [];
 
 		console.log(tl.loc("DeployingServices"));
 		console.log(tl.loc("DeployingServicesBaseFolder", this.settings.appSourceBasePath));
@@ -70,10 +71,10 @@ export class Deployer {
 		return result;
 	}
 
-	private ExecuteDeployment(azArgs: string, service: string, result: boolean): any {
+	private async ExecuteDeployment(azArgs: string, service: string, result: boolean): Promise<any> {
 		let retryCount = this.retryCount[service];
 		if (retryCount > 0) {
-			this.delay( retryCount * Deployer.retryDelayInMilliseconds)
+			await this.delay( retryCount * Deployer.retryDelayInMilliseconds)
 		}
 
 		return tl.exec("az", azArgs).then(
