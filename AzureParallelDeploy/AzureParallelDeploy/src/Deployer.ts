@@ -1,5 +1,4 @@
 import tl = require("azure-pipelines-task-lib/task");
-import Q = require("q");
 import { AppType, Settings } from "./Interfaces";
 import { Utility } from "./Utility";
 
@@ -15,7 +14,7 @@ export class Deployer {
 	private readonly retryCount: Map<string, number> = new Map<string, number>();
 	private static readonly maxRetries = 3;
 
-	private static readonly  retryDelayInMilliseconds = 3000;
+	private static readonly retryDelayInMilliseconds = 3000;
 
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var result: boolean = true;
@@ -72,9 +71,9 @@ export class Deployer {
 	}
 
 	private async ExecuteDeployment(azArgs: string, service: string, result: boolean): Promise<any> {
-		let retryCount = this.retryCount[service];
+		var retryCount = this.retryCount[service];
 		if (retryCount > 0) {
-			await this.delay( retryCount * Deployer.retryDelayInMilliseconds)
+			await this.delay(retryCount * Deployer.retryDelayInMilliseconds)
 		}
 
 		return tl.exec("az", azArgs).then(
@@ -83,6 +82,7 @@ export class Deployer {
 			},
 			error => {
 				this.retryCount[service]++;
+				retryCount = this.retryCount[service];
 				if (retryCount <= Deployer.maxRetries) {
 					console.log(`${service}: ${tl.loc("DeployServiceRetry", retryCount)}`);
 					this.ExecuteDeployment(azArgs, service, result);
@@ -98,8 +98,7 @@ export class Deployer {
 		);
 	}
 
-	private delay(ms: number)
-	{
+	private delay(ms: number) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 }
