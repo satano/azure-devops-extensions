@@ -12,9 +12,9 @@
 	],
 	"author": "Stano Peťko",
 	"version": {
-		"Major": 1,
+		"Major": 2,
 		"Minor": 0,
-		"Patch": 37
+		"Patch": 0
 	},
 	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
 	"execution": {
@@ -117,6 +117,7 @@
 		"ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
 		"SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
 		"SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
+		"DeployServiceRetry": "ms-resource:loc.messages.DeployServiceRetry",
 		"DeployingServices": "ms-resource:loc.messages.DeployingServices",
 		"DeployingServicesBaseFolder": "ms-resource:loc.messages.DeployingServicesBaseFolder",
 		"DeployingServiceStart": "ms-resource:loc.messages.DeployingServiceStart",
