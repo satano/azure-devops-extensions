@@ -142,6 +142,10 @@ Invoke [sync function triggers][SyncFunctionTriggers] action after successfull d
 
 Invoke [sync function triggers][SyncFunctionTriggers] action must be explicitly turned on by input parameter `SyncFunctionTriggers`.
 
+### 2.0
+
+Add retrying.
+
 [AppServiceDeployTask]: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment
 [ImgSettings]: https://raw.githubusercontent.com/satano/azure-devops-extensions/master/AzureParallelDeploy/images/azure-parallel-deploy.png
 [PipelineJoin]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops#join
