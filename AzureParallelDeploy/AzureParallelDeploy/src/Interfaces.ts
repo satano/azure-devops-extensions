@@ -10,4 +10,6 @@ export interface Settings {
 	appSourceFormat: string;
 	appSourceBasePath: string;
 	slotName: string;
+	subscriptionId: string;
+	syncFunctionTriggers: boolean;
 }
