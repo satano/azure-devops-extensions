@@ -1,5 +1,5 @@
 import tl = require("azure-pipelines-task-lib/task");
-import { AppType, Settings } from './Interfaces'
+import { AppType, Settings } from "./Interfaces";
 import { Utility } from "./Utility";
 
 export class Deployer {
@@ -12,9 +12,14 @@ export class Deployer {
 	public readonly settings: Settings;
 	public readonly debug: boolean;
 
+	private readonly retryCount: Map<string, number> = new Map<string, number>();
+	private static readonly maxRetries = 3;
+
+	private static readonly retryDelayInMilliseconds = 3000;
+
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var deploymentResult: boolean = true;
-		var deployments: Q.Promise<void>[] = [];
+		var deployments: Promise<any>[] = [];
 		var deployedServices: string[] = [];
 		var azSlotNameArg = this.hasSlot() ? ` --slot ${this.settings.slotName}` : "";
 
@@ -55,23 +60,14 @@ export class Deployer {
 				+ ` --resource-group ${this.settings.resourceGroup}`
 				+ ` --name ${targetService}${azSlotNameArg}`
 				+ ` --src "${sourceFiles[0]}"`;
-			let deployment = tl.exec("az", azArgs)
-				.then(
-					result => {
-						deployedServices.push(targetService);
-						console.log(`${service}: ${tl.loc("DeployingServiceOk")}`)
-					},
-					error => {
-						deploymentResult = false;
-						if (this.debug) {
-							Utility.logError(error);
-						}
-						tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
-					}
-				);
+
+			this.retryCount[service] = 0;
+
+			let deployment = this.ExecuteDeployment(azArgs, service, targetService, deployedServices, deploymentResult);
 			deployments.push(deployment);
 		});
 		await Promise.all(deployments);
+
 		if (this.settings.appType == AppType.FunctionApp) {
 			if (deploymentResult && this.settings.syncFunctionTriggers) {
 				console.log(tl.loc("SyncFunctionTriggersInvoking"))
@@ -82,6 +78,41 @@ export class Deployer {
 		}
 
 		return deploymentResult;
+	}
+
+	private async ExecuteDeployment(
+		azArgs: string,
+		service: string,
+		targetService: string,
+		deployedServices: string[],
+		result: boolean): Promise<any> {
+
+		var retryCount = this.retryCount[service];
+		if (retryCount > 0) {
+			await this.delay(retryCount * Deployer.retryDelayInMilliseconds)
+		}
+
+		return tl.exec("az", azArgs).then(
+			_ => {
+				deployedServices.push(targetService);
+				console.log(`${service}: ${tl.loc("DeployingServiceOk")}`);
+			},
+			error => {
+				this.retryCount[service]++;
+				retryCount = this.retryCount[service];
+				if (retryCount <= Deployer.maxRetries) {
+					console.log(`${service}: ${tl.loc("DeployServiceRetry", retryCount)}`);
+					this.ExecuteDeployment(azArgs, service, targetService, deployedServices, result);
+				} else {
+					result = false;
+					tl.error(`${service}: ${tl.loc("DeployingServiceError")}`);
+				}
+
+				if (this.debug) {
+					Utility.logError(error);
+				}
+			}
+		);
 	}
 
 	private syncFunctionTriggers(services: string[]): boolean {
@@ -110,5 +141,9 @@ export class Deployer {
 
 	private hasSlot(): boolean {
 		return !Utility.isNullOrWhitespace(this.settings.slotName);
+	}
+
+	private delay(ms: number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 }
