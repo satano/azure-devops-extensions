@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
 	"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
-	"name": "AzureParallelDeploy",
+	"name": "AzureParallelDeployV2",
 	"friendlyName": "ms-resource:loc.friendlyName",
 	"description": "ms-resource:loc.description",
 	"helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 2,
 		"Minor": 0,
-		"Patch": 0
+		"Patch": 1
 	},
 	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
 	"execution": {

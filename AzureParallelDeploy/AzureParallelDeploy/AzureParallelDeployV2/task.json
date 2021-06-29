@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
 	"id": "0477968a-4686-4790-bb4a-e1213a2e58a9",
-	"name": "AzureParallelDeploy",
+	"name": "AzureParallelDeployV2",
 	"friendlyName": "Azure Parallel Deploy",
 	"description": "Simplify your pipeline and minimize service deploy time by deploying multiple services to Azure Portal in parallel.",
 	"helpMarkDown": "[More information](https://github.com/satano/azure-devops-extensions/tree/master/AzureParallelDeploy#azure-parallel-deploy-task)",
@@ -14,7 +14,7 @@
 	"version": {
 		"Major": 2,
 		"Minor": 0,
-		"Patch": 0
+		"Patch": 1
 	},
 	"instanceNameFormat": "Deploy services",
 	"execution": {
