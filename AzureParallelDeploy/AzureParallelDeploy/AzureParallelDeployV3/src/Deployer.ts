@@ -1,4 +1,5 @@
 import tl = require("azure-pipelines-task-lib/task");
+import promiseAllAlways = require("promise-all-always");
 import { AppType, Settings } from "./Interfaces";
 import { Utility } from "./Utility";
 
@@ -66,9 +67,9 @@ export class Deployer {
 			let deployment = this.ExecuteDeployment(azArgs, service, targetService, deployedServices);
 			deployments.push(deployment);
 		});
-		await Promise.allSettled(deployments).then(results => {
+		await promiseAllAlways(deployments).then(results => {
 			console.log(results);
-			deploymentResult = (results.filter(result => { return result.status != "fulfilled"}).length == 0);
+			deploymentResult = (results.filter(result => { return !result.isResolved}).length == 0);
 		});
 
 		if (this.settings.appType == AppType.FunctionApp) {
