@@ -14,9 +14,9 @@ export class Deployer {
 	public readonly debug: boolean;
 
 	private readonly retryCount: Map<string, number> = new Map<string, number>();
-	private static readonly maxRetries = 3;
+	private static readonly maxRetries = 10;
 
-	private static readonly retryDelayInMilliseconds = 3000;
+	private static readonly retryDelayInMilliseconds = 6000;
 
 	public async deployWebApps(services: string[]): Promise<boolean> {
 		var deploymentResult: boolean = true;
